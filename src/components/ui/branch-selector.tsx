@@ -29,13 +29,13 @@ export function BranchSelector({ branches, className }: BranchSelectorProps) {
   const [open, setOpen] = useState(false)
   const { selectedBranch, setSelectedBranch, currentUser, canAccessBranch } = useDashboardStore()
 
-  // Filter branches based on user access
-  const accessibleBranches = branches.filter(branch => 
-    currentUser?.role === 'admin' || canAccessBranch(branch.id)
-  )
+  // All branches are always accessible
+  const accessibleBranches = branches
 
   const handleBranchSelect = (branch: Branch) => {
-    setSelectedBranch(branch)
+    // Always use the branch object from Zustand's branches array by id
+    const zustandBranch = branches.find(b => b.id === branch.id) || branch
+    setSelectedBranch(zustandBranch)
     setOpen(false)
   }
 
@@ -74,9 +74,10 @@ export function BranchSelector({ branches, className }: BranchSelectorProps) {
               {accessibleBranches.map((branch) => (
                 <CommandItem
                   key={branch.id}
-                  value={branch.name}
+                  value={branch.id}
                   onSelect={() => handleBranchSelect(branch)}
-                  className="cursor-pointer"
+                  className="cursor-pointer !opacity-100 !pointer-events-auto"
+                  aria-disabled={false}
                 >
                   <Check
                     className={cn(

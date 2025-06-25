@@ -20,7 +20,7 @@ import {
   Building2,
   ArrowRight
 } from 'lucide-react'
-import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, BarChart, Bar } from 'recharts'
+import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, BarChart, Bar, AreaChart, Area, PieChart, Pie, Cell } from 'recharts'
 import { 
   branches, 
   getBranchStats, 
@@ -57,6 +57,9 @@ export default function DashboardPage() {
       name: 'Admin User',
       email: 'admin@example.com',
       role: 'admin',
+      status: 'active',
+      createdAt: new Date(),
+      updatedAt: new Date(),
     })
     // eslint-disable-next-line
   }, [])
@@ -88,12 +91,17 @@ export default function DashboardPage() {
   const salesData = selectedBranch ? getBranchSalesData(selectedBranch.id) : []
   const productPerformance = selectedBranch 
     ? getBranchProducts(selectedBranch.id).slice(0, 5).map(product => ({
-        ...product,
-        sales: Math.floor(Math.random() * 50) + 10, 
+        productId: product.id,
+        productName: product.name,
+        sales: Math.floor(Math.random() * 50) + 10,
+        revenue: Math.floor(Math.random() * 200) + 50,
+        orders: Math.floor(Math.random() * 30) + 5,
+        branchId: selectedBranch.id
       }))
     : []
   const recentOrders = selectedBranch ? getBranchOrders(selectedBranch.id).slice(0, 5) : []
   const inventoryAlerts = selectedBranch ? getBranchInventoryAlerts(selectedBranch.id) : []
+  const COLORS = ['#8b5cf6', '#ec4899', '#06b6d4', '#10b981', '#f59e0b', '#ef4444']
 
   if (!selectedBranch) {
     return (
@@ -239,10 +247,6 @@ export default function DashboardPage() {
             <div className="text-2xl font-bold text-gray-800">
               {branchStats?.totalCustomers || 0}
             </div>
-            <p className="text-xs text-gray-500 flex items-center mt-1">
-              <TrendingUp className="mr-1 h-3 w-3 text-purple-500" />
-              +{branchStats?.newCustomers || 0} new this week
-            </p>
           </CardContent>
         </Card>
 
@@ -253,7 +257,7 @@ export default function DashboardPage() {
           </CardHeader>
           <CardContent>
             <div className="text-2xl font-bold text-gray-800">
-              {(branchStats?.totalSales && branchStats?.totalOrders) ? ((branchStats.totalSales / branchStats.totalOrders) ?? 0).toFixed(2) : '0.00'}
+              {(branchStats?.totalSales && branchStats?.totalOrders) ? (branchStats.totalSales / branchStats.totalOrders).toFixed(2) : '0.00'}
             </div>
             <p className="text-xs text-gray-500 mt-1">
               vs. $22.50 last month
@@ -262,36 +266,69 @@ export default function DashboardPage() {
         </Card>
       </div>
 
-      {/* Main Grid */}
+      {/* Main Grid - Analytics Charts */}
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
-        {/* Sales Chart */}
-        <Card className="col-span-1 lg:col-span-2 bg-white/60 backdrop-blur-sm border-gray-200/50">
+        {/* Revenue Trends AreaChart */}
+        <Card className="col-span-2 bg-white/60 backdrop-blur-sm border-gray-200/50">
           <CardHeader>
             <CardTitle className="flex items-center">
-              <BarChart3 className="mr-2 h-5 w-5 text-blue-500" />
-              Sales Performance
+              <BarChart3 className="mr-2 h-5 w-5 text-purple-500" />
+              Revenue Trends - {selectedBranch.name}
             </CardTitle>
-            <CardDescription>Last 7 days</CardDescription>
+            <CardDescription>Monthly revenue performance over time</CardDescription>
           </CardHeader>
           <CardContent>
             <ResponsiveContainer width="100%" height={300}>
-              <LineChart data={salesData}>
-                <CartesianGrid strokeDasharray="3 3" stroke="#e0e0e0" />
-                <XAxis dataKey="date" fontSize={12} tickLine={false} axisLine={false} />
-                <YAxis fontSize={12} tickLine={false} axisLine={false} tickFormatter={(value) => `$${value}`} />
-                <Tooltip
-                  contentStyle={{
-                    borderRadius: "8px",
-                    boxShadow: "0 4px 12px rgba(0,0,0,0.1)",
-                    border: "none",
-                  }}
-                />
-                <Line type="monotone" dataKey="revenue" strokeWidth={2} stroke="#3b82f6" dot={{ r: 4, fill: "#3b82f6" }} />
-              </LineChart>
+              <AreaChart data={salesData}>
+                <CartesianGrid strokeDasharray="3 3" stroke="rgba(139, 92, 246, 0.1)" />
+                <XAxis dataKey="date" stroke="#888888" fontSize={12} tickLine={false} axisLine={false} />
+                <YAxis stroke="#888888" fontSize={12} tickLine={false} axisLine={false} tickFormatter={(value) => `$${value}`} />
+                <Tooltip contentStyle={{ backgroundColor: 'rgba(255, 255, 255, 0.95)', border: '1px solid rgba(139, 92, 246, 0.2)', borderRadius: '8px', boxShadow: '0 10px 25px rgba(0, 0, 0, 0.1)' }} />
+                <Area type="monotone" dataKey="sales" stroke="url(#areaGradient)" fill="url(#areaGradient)" strokeWidth={3} />
+                <defs>
+                  <linearGradient id="areaGradient" x1="0" y1="0" x2="0" y2="1">
+                    <stop offset="5%" stopColor="#8b5cf6" stopOpacity={0.8}/>
+                    <stop offset="95%" stopColor="#ec4899" stopOpacity={0.1}/>
+                  </linearGradient>
+                </defs>
+              </AreaChart>
             </ResponsiveContainer>
           </CardContent>
         </Card>
-        
+        {/* Top Products PieChart */}
+        <Card className="col-span-1 bg-white/60 backdrop-blur-sm border-gray-200/50">
+          <CardHeader>
+            <CardTitle className="flex items-center">
+              <Package className="mr-2 h-5 w-5 text-orange-500" />
+              Top Products - {selectedBranch.name}
+            </CardTitle>
+            <CardDescription>Best performing products by revenue</CardDescription>
+          </CardHeader>
+          <CardContent>
+            <ResponsiveContainer width="100%" height={300}>
+              <PieChart>
+                <Pie
+                  data={productPerformance}
+                  cx="50%"
+                  cy="50%"
+                  labelLine={false}
+                  label={({ productName, percent }) => `${productName} ${((percent || 0) * 100).toFixed(0)}%`}
+                  outerRadius={80}
+                  fill="#8884d8"
+                  dataKey="revenue"
+                >
+                  {productPerformance.map((entry, index) => (
+                    <Cell key={`cell-${index}`} fill={COLORS[index % COLORS.length]} />
+                  ))}
+                </Pie>
+                <Tooltip contentStyle={{ backgroundColor: 'rgba(255, 255, 255, 0.95)', border: '1px solid rgba(139, 92, 246, 0.2)', borderRadius: '8px', boxShadow: '0 10px 25px rgba(0, 0, 0, 0.1)' }} />
+              </PieChart>
+            </ResponsiveContainer>
+          </CardContent>
+        </Card>
+      </div>
+      
+      <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
         {/* Quick Actions */}
         <Card className="bg-white/60 backdrop-blur-sm border-gray-200/50">
           <CardHeader>
@@ -312,35 +349,6 @@ export default function DashboardPage() {
                 <span className="font-semibold text-gray-700">{action.name}</span>
                 <ArrowRight className="h-4 w-4 ml-auto text-gray-400 opacity-0 group-hover:opacity-100 transition-opacity" />
               </Button>
-            ))}
-          </CardContent>
-        </Card>
-      </div>
-      
-      <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
-        {/* Top Products */}
-        <Card className="col-span-1 lg:col-span-2 bg-white/60 backdrop-blur-sm border-gray-200/50">
-          <CardHeader>
-            <CardTitle className="flex items-center">
-              <Package className="mr-2 h-5 w-5 text-yellow-500" />
-              Top Products by Sales
-            </CardTitle>
-          </CardHeader>
-          <CardContent className="space-y-4">
-            {productPerformance.filter(product => product && typeof product.price === 'number').map((product) => (
-              <div key={product.id} className="flex items-center justify-between">
-                <div className="flex items-center">
-                  <Coffee className="h-5 w-5 text-yellow-600 mr-3" />
-                  <div>
-                    <p className="font-semibold text-sm">{product.name}</p>
-                    <p className="text-xs text-gray-500">{product.category}</p>
-                  </div>
-                </div>
-                <div className="text-right">
-                  <p className="font-bold text-sm">${(product.price ?? 0).toFixed(2)}</p>
-                  <p className="text-xs text-gray-500">{product.sales} sold</p>
-                </div>
-              </div>
             ))}
           </CardContent>
         </Card>
