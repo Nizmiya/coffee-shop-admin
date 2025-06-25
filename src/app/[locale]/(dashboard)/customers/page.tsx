@@ -7,13 +7,14 @@ import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar'
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table'
-import { Search, Users, Mail, Phone, MapPin, Star, Sparkles, TrendingUp, ShoppingBag, Calendar } from 'lucide-react'
-import { customers } from '@/lib/mock-data'
+import { Search, Users, Mail, Phone, MapPin, Star, Sparkles, TrendingUp, ShoppingBag, Calendar, Trash2 } from 'lucide-react'
 import { useDashboardStore } from '@/lib/store/dashboard-store'
+import { getBranchCustomers } from '@/lib/mock-data'
 
 export default function CustomersPage() {
+  const { selectedBranch } = useDashboardStore()
+  const customers = selectedBranch ? getBranchCustomers(selectedBranch.id) : []
   const [searchTerm, setSearchTerm] = useState('')
-  const { addNotification } = useDashboardStore()
 
   const filteredCustomers = customers.filter(customer =>
     customer.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
@@ -25,32 +26,32 @@ export default function CustomersPage() {
   const totalSpent = customers.reduce((sum, c) => sum + c.totalSpent, 0)
   const averageSpent = totalSpent / totalCustomers
 
-  const handleViewCustomer = (customer: any) => {
-    addNotification({
-      type: 'info',
-      title: 'View Customer',
-      message: `Viewing ${customer.name}'s profile`,
-      duration: 3000
-    })
-  }
+  // const handleViewCustomer = (_customer: Customer) => {
+  //   // addNotification({
+  //   //   type: 'info',
+  //   //   title: 'View Customer',
+  //   //   message: `Viewing ${customer.name}'s profile`,
+  //   //   duration: 3000
+  //   // })
+  // }
 
-  const handleEditCustomer = (customer: any) => {
-    addNotification({
-      type: 'info',
-      title: 'Edit Customer',
-      message: `Editing ${customer.name}'s information`,
-      duration: 3000
-    })
-  }
+  // const handleEditCustomer = (_customer: Customer) => {
+  //   // addNotification({
+  //   //   type: 'info',
+  //   //   title: 'Edit Customer',
+  //   //   message: `Editing ${customer.name}'s information`,
+  //   //   duration: 3000
+  //   // })
+  // }
 
-  const handleDeleteCustomer = (customer: any) => {
-    addNotification({
-      type: 'success',
-      title: 'Customer Deleted',
-      message: `${customer.name} has been removed from the system`,
-      duration: 3000
-    })
-  }
+  // const handleDeleteCustomer = (customer: Customer) => {
+  //   // addNotification({
+  //   //   type: 'success',
+  //   //   title: 'Customer Deleted',
+  //   //   message: `${customer.name} has been removed from the system`,
+  //   //   duration: 3000
+  //   // })
+  // }
 
   return (
     <div className="space-y-6">
@@ -253,21 +254,26 @@ export default function CustomersPage() {
                     </TableCell>
                     <TableCell>
                       <div className="flex items-center space-x-2">
-                        <Button
-                          variant="outline"
+                        <Button 
+                          variant="outline" 
                           size="sm"
                           className="hover:bg-gradient-to-r hover:from-blue-50 hover:to-cyan-50 border-blue-200 hover:border-blue-300 transition-all duration-300"
-                          onClick={() => handleViewCustomer(customer)}
                         >
                           <Users className="h-4 w-4" />
                         </Button>
-                        <Button
-                          variant="outline"
+                        <Button 
+                          variant="outline" 
                           size="sm"
                           className="hover:bg-gradient-to-r hover:from-purple-50 hover:to-pink-50 border-purple-200 hover:border-purple-300 transition-all duration-300"
-                          onClick={() => handleEditCustomer(customer)}
                         >
                           <Mail className="h-4 w-4" />
+                        </Button>
+                        <Button 
+                          variant="outline" 
+                          size="sm"
+                          className="hover:bg-gradient-to-r hover:from-red-50 hover:to-pink-50 border-red-200 hover:border-red-300 transition-all duration-300"
+                        >
+                          <Trash2 className="h-4 w-4" />
                         </Button>
                       </div>
                     </TableCell>

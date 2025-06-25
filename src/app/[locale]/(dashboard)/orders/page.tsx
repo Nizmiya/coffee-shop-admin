@@ -8,13 +8,14 @@ import { Input } from '@/components/ui/input'
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select'
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table'
 import { Search, Filter, Eye, Edit, Trash2, ShoppingCart, Sparkles, Clock, CheckCircle, XCircle } from 'lucide-react'
-import { orders } from '@/lib/mock-data'
 import { useDashboardStore } from '@/lib/store/dashboard-store'
+import { getBranchOrders } from '@/lib/mock-data'
 
 export default function OrdersPage() {
+  const { selectedBranch } = useDashboardStore()
+  const orders = selectedBranch ? getBranchOrders(selectedBranch.id) : []
   const [searchTerm, setSearchTerm] = useState('')
   const [statusFilter, setStatusFilter] = useState('all')
-  const { addNotification } = useDashboardStore()
 
   const filteredOrders = orders.filter(order => {
     const matchesSearch = order.customerName.toLowerCase().includes(searchTerm.toLowerCase()) ||
@@ -51,33 +52,6 @@ export default function OrdersPage() {
       default:
         return <Clock className="h-4 w-4" />
     }
-  }
-
-  const handleViewOrder = (order: any) => {
-    addNotification({
-      type: 'info',
-      title: 'View Order',
-      message: `Viewing order ${order.orderNumber}`,
-      duration: 3000
-    })
-  }
-
-  const handleEditOrder = (order: any) => {
-    addNotification({
-      type: 'info',
-      title: 'Edit Order',
-      message: `Editing order ${order.orderNumber}`,
-      duration: 3000
-    })
-  }
-
-  const handleDeleteOrder = (order: any) => {
-    addNotification({
-      type: 'success',
-      title: 'Order Deleted',
-      message: `Order ${order.orderNumber} has been deleted successfully!`,
-      duration: 3000
-    })
   }
 
   const totalRevenue = orders.reduce((sum, order) => sum + order.total, 0)
@@ -264,7 +238,6 @@ export default function OrdersPage() {
                           variant="outline"
                           size="sm"
                           className="hover:bg-gradient-to-r hover:from-blue-50 hover:to-cyan-50 border-blue-200 hover:border-blue-300 transition-all duration-300"
-                          onClick={() => handleViewOrder(order)}
                         >
                           <Eye className="h-4 w-4" />
                         </Button>
@@ -272,7 +245,6 @@ export default function OrdersPage() {
                           variant="outline"
                           size="sm"
                           className="hover:bg-gradient-to-r hover:from-purple-50 hover:to-pink-50 border-purple-200 hover:border-purple-300 transition-all duration-300"
-                          onClick={() => handleEditOrder(order)}
                         >
                           <Edit className="h-4 w-4" />
                         </Button>
@@ -280,7 +252,6 @@ export default function OrdersPage() {
                           variant="outline"
                           size="sm"
                           className="hover:bg-gradient-to-r hover:from-red-50 hover:to-pink-50 border-red-200 hover:border-red-300 transition-all duration-300"
-                          onClick={() => handleDeleteOrder(order)}
                         >
                           <Trash2 className="h-4 w-4" />
                         </Button>

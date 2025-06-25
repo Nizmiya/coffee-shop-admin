@@ -6,6 +6,8 @@ export interface Product {
   category: string
   image: string
   inStock: boolean
+  stockQuantity: number
+  branchId: string
   createdAt: Date
   updatedAt: Date
 }
@@ -15,6 +17,7 @@ export interface Category {
   name: string
   description: string
   productCount: number
+  branchId: string
 }
 
 export interface Customer {
@@ -22,14 +25,14 @@ export interface Customer {
   name: string
   email: string
   phone: string
-  location: string
-  orderCount: number
+  address: string
   totalSpent: number
+  orderCount: number
+  lastOrderDate: Date
   status: 'active' | 'inactive'
-  avatar?: string
-  joinedDate: Date
-  lastOrder: Date
+  branchId: string
   createdAt: Date
+  updatedAt: Date
 }
 
 export interface Order {
@@ -37,10 +40,12 @@ export interface Order {
   orderNumber: string
   customerId: string
   customerName: string
+  branchId: string
   items: OrderItem[]
   total: number
   status: 'pending' | 'in-progress' | 'completed' | 'cancelled'
   paymentMethod: 'cash' | 'card' | 'online'
+  orderDate: Date
   createdAt: Date
   updatedAt: Date
 }
@@ -50,13 +55,13 @@ export interface OrderItem {
   productName: string
   quantity: number
   price: number
-  total: number
 }
 
 export interface SalesData {
   date: string
   sales: number
   orders: number
+  branchId: string
 }
 
 export interface ProductPerformance {
@@ -65,6 +70,7 @@ export interface ProductPerformance {
   sales: number
   revenue: number
   orders: number
+  branchId: string
 }
 
 export interface DashboardStats {
@@ -75,4 +81,55 @@ export interface DashboardStats {
   todaySales: number
   todayOrders: number
   monthlyGrowth: number
+  branchId: string
+}
+
+// New types for multi-branch system
+export interface Branch {
+  id: string
+  name: string
+  location: string
+  address: string
+  phone: string
+  email: string
+  managerId?: string
+  status: 'active' | 'inactive'
+  createdAt: Date
+  updatedAt: Date
+}
+
+export interface User {
+  id: string
+  name: string
+  email: string
+  role: 'admin' | 'manager' | 'staff'
+  branchId?: string
+  status: 'active' | 'inactive'
+  avatar?: string
+  createdAt: Date
+  updatedAt: Date
+}
+
+export interface BranchStats {
+  branchId: string
+  branchName: string
+  totalSales: number
+  totalOrders: number
+  totalCustomers: number
+  totalProducts: number
+  todaySales: number
+  todayOrders: number
+  monthlyGrowth: number
+  lowStockItems: number
+}
+
+export interface InventoryAlert {
+  id: string
+  productId: string
+  productName: string
+  branchId: string
+  currentStock: number
+  lowStockThreshold: number
+  alertType: 'low_stock' | 'out_of_stock'
+  createdAt: Date
 } 

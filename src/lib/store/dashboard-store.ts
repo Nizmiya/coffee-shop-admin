@@ -1,15 +1,6 @@
 import { create } from 'zustand'
 import { persist } from 'zustand/middleware'
-
-interface DashboardState {
-  theme: 'light' | 'dark'
-  sidebarOpen: boolean
-  notifications: Notification[]
-  toggleTheme: () => void
-  toggleSidebar: () => void
-  addNotification: (notification: Omit<Notification, 'id'>) => void
-  removeNotification: (id: string) => void
-}
+import { Branch, User, BranchStats } from '@/lib/types'
 
 interface Notification {
   id: string
@@ -19,12 +10,51 @@ interface Notification {
   duration?: number
 }
 
-export const useDashboardStore = create<DashboardState>()(
+interface DashboardStore {
+  // Theme and UI
+  theme: 'light' | 'dark'
+  sidebarOpen: boolean
+  notifications: Notification[]
+  
+  // Branch management
+  selectedBranch: Branch | null
+  branches: Branch[]
+  currentUser: User | null
+  
+  // Branch stats
+  branchStats: BranchStats | null
+  
+  // Actions
+  toggleTheme: () => void
+  toggleSidebar: () => void
+  addNotification: (notification: Omit<Notification, 'id'>) => void
+  removeNotification: (id: string) => void
+  setSelectedBranch: (branch: Branch) => void
+  setBranches: (branches: Branch[]) => void
+  setCurrentUser: (user: User) => void
+  setBranchStats: (stats: BranchStats) => void
+  addBranch: (branch: Branch) => void
+  
+  // Computed values
+  isAdmin: boolean
+  isManager: boolean
+  canAccessBranch: (branchId: string) => boolean
+}
+
+export const useDashboardStore = create<DashboardStore>()(
   persist(
     (set, get) => ({
       theme: 'light',
       sidebarOpen: true,
       notifications: [],
+      
+      // Branch management
+      selectedBranch: null,
+      branches: [],
+      currentUser: null,
+      
+      // Branch stats
+      branchStats: null,
       
       toggleTheme: () => {
         const currentTheme = get().theme
@@ -56,6 +86,28 @@ export const useDashboardStore = create<DashboardState>()(
         set((state) => ({
           notifications: state.notifications.filter(n => n.id !== id)
         }))
+      },
+      
+      // Actions
+      setSelectedBranch: (branch) => set({ selectedBranch: branch }),
+      setBranches: (branches) => set({ branches }),
+      setCurrentUser: (user) => set({ currentUser: user }),
+      setBranchStats: (stats) => set({ branchStats: stats }),
+      addBranch: (branch) => set((state) => ({ branches: [...state.branches, branch] })),
+      
+      // Computed values
+      get isAdmin() {
+        return get().currentUser?.role === 'admin'
+      },
+      
+      get isManager() {
+        return get().currentUser?.role === 'manager'
+      },
+      
+      canAccessBranch: (branchId) => {
+        const { currentUser, isAdmin } = get()
+        if (isAdmin) return true
+        return currentUser?.branchId === branchId
       }
     }),
     {

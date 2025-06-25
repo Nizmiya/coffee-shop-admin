@@ -1,7 +1,6 @@
 'use client'
 
-import { useState } from 'react'
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
+import { useState, useEffect } from 'react'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
@@ -10,30 +9,52 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@
 import { Switch } from '@/components/ui/switch'
 import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle, DialogTrigger } from '@/components/ui/dialog'
 import { Plus, Upload, Coffee, Sparkles } from 'lucide-react'
-import { categories } from '@/lib/mock-data'
+import { categories as mockCategories } from '@/lib/mock-data'
 import { Product } from '@/lib/types'
 
 interface ProductFormProps {
-  onSave: (product: Omit<Product, 'id' | 'createdAt' | 'updatedAt'>) => void
+  onSave: (data: Omit<Product, 'id' | 'createdAt' | 'updatedAt'>) => void
   onCancel: () => void
+  open: boolean
+  setOpen: (open: boolean) => void
+  initialData?: Product
+  branchId?: string
+  categories: string[]
 }
 
-export default function ProductForm({ onSave, onCancel }: ProductFormProps) {
-  const [open, setOpen] = useState(false)
+export default function ProductForm({ onSave, onCancel, open, setOpen, initialData, branchId, categories }: ProductFormProps) {
+  const isEdit = !!initialData
   const [formData, setFormData] = useState({
-    name: '',
-    description: '',
-    price: '',
-    category: '',
-    image: '',
-    inStock: true
+    name: initialData?.name || '',
+    description: initialData?.description || '',
+    price: initialData?.price?.toString() || '',
+    category: initialData?.category || '',
+    image: initialData?.image || '',
+    inStock: initialData?.inStock ?? true,
+    stockQuantity: initialData?.stockQuantity ?? 0,
+    branchId: branchId || initialData?.branchId || ''
   })
+
+  useEffect(() => {
+    setFormData({
+      name: initialData?.name || '',
+      description: initialData?.description || '',
+      price: initialData?.price?.toString() || '',
+      category: initialData?.category || '',
+      image: initialData?.image || '',
+      inStock: initialData?.inStock ?? true,
+      stockQuantity: initialData?.stockQuantity ?? 0,
+      branchId: branchId || initialData?.branchId || ''
+    })
+  }, [initialData, branchId])
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault()
     onSave({
       ...formData,
-      price: parseFloat(formData.price)
+      price: parseFloat(formData.price),
+      stockQuantity: parseInt(formData.stockQuantity.toString()),
+      branchId: formData.branchId
     })
     setFormData({
       name: '',
@@ -41,9 +62,10 @@ export default function ProductForm({ onSave, onCancel }: ProductFormProps) {
       price: '',
       category: '',
       image: '',
-      inStock: true
+      inStock: true,
+      stockQuantity: 0,
+      branchId: branchId || ''
     })
-    setOpen(false)
   }
 
   const handleImageUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -65,157 +87,82 @@ export default function ProductForm({ onSave, onCancel }: ProductFormProps) {
           Add Product
         </Button>
       </DialogTrigger>
-      <DialogContent className="sm:max-w-[600px] bg-gradient-to-br from-white/95 to-white/90 backdrop-blur-xl border border-white/30">
+      <DialogContent className="max-w-[340px] p-2 rounded-lg bg-white/95 border border-purple-200 shadow-xl">
         <DialogHeader>
-          <DialogTitle className="flex items-center text-2xl font-bold bg-gradient-to-r from-purple-600 to-pink-600 bg-clip-text text-transparent">
-            <Coffee className="mr-2 h-6 w-6 text-purple-500" />
-            Add New Product
+          <DialogTitle className="flex items-center text-base font-bold bg-gradient-to-r from-purple-600 to-pink-600 bg-clip-text text-transparent">
+            <Coffee className="mr-2 h-4 w-4 text-purple-500" />
+            {isEdit ? 'Edit Product' : 'Add New Product'}
           </DialogTitle>
-          <DialogDescription className="text-muted-foreground">
-            Create a new product for your coffee shop menu
+          <DialogDescription className="text-muted-foreground text-xs">
+            {isEdit ? 'Update product details' : 'Create a new product for your coffee shop menu'}
           </DialogDescription>
         </DialogHeader>
-        
-        <form onSubmit={handleSubmit} className="space-y-6">
-          <div className="grid gap-4 md:grid-cols-2">
-            <div className="space-y-2">
-              <Label htmlFor="name" className="text-sm font-medium">
-                Product Name
-              </Label>
-              <Input
-                id="name"
-                value={formData.name}
-                onChange={(e) => setFormData(prev => ({ ...prev, name: e.target.value }))}
-                placeholder="e.g., Espresso Shot"
-                className="form-input"
-                required
-              />
+        <form onSubmit={handleSubmit} className="space-y-3">
+          <div className="grid gap-2 grid-cols-2">
+            <div className="space-y-1">
+              <Label htmlFor="name" className="text-xs font-medium">Product Name</Label>
+              <Input id="name" value={formData.name} onChange={(e) => setFormData(prev => ({ ...prev, name: e.target.value }))} placeholder="e.g., Espresso Shot" className="form-input h-8 text-sm" required />
             </div>
-            
-            <div className="space-y-2">
-              <Label htmlFor="price" className="text-sm font-medium">
-                Price ($)
-              </Label>
-              <Input
-                id="price"
-                type="number"
-                step="0.01"
-                value={formData.price}
-                onChange={(e) => setFormData(prev => ({ ...prev, price: e.target.value }))}
-                placeholder="0.00"
-                className="form-input"
-                required
-              />
+            <div className="space-y-1">
+              <Label htmlFor="price" className="text-xs font-medium">Price ($)</Label>
+              <Input id="price" type="number" step="0.01" value={formData.price} onChange={(e) => setFormData(prev => ({ ...prev, price: e.target.value }))} placeholder="0.00" className="form-input h-8 text-sm" required />
             </div>
           </div>
-
-          <div className="space-y-2">
-            <Label htmlFor="description" className="text-sm font-medium">
-              Description
-            </Label>
-            <Textarea
-              id="description"
-              value={formData.description}
-              onChange={(e) => setFormData(prev => ({ ...prev, description: e.target.value }))}
-              placeholder="Describe your product..."
-              className="form-input min-h-[100px] resize-none"
-              required
-            />
-          </div>
-
-          <div className="grid gap-4 md:grid-cols-2">
-            <div className="space-y-2">
-              <Label htmlFor="category" className="text-sm font-medium">
-                Category
-              </Label>
-              <Select value={formData.category} onValueChange={(value) => setFormData(prev => ({ ...prev, category: value }))}>
-                <SelectTrigger className="form-input">
+          <div className="grid gap-2 grid-cols-2">
+            <div className="space-y-1">
+              <Label htmlFor="stockQuantity" className="text-xs font-medium">Stock Qty</Label>
+              <Input id="stockQuantity" type="number" min="0" value={formData.stockQuantity} onChange={(e) => setFormData(prev => ({ ...prev, stockQuantity: parseInt(e.target.value) || 0 }))} placeholder="0" className="form-input h-8 text-sm" required />
+            </div>
+            <div className="space-y-1">
+              <Label htmlFor="category" className="text-xs font-medium">Category</Label>
+              <Select value={formData.category} onValueChange={(value) => setFormData(prev => ({ ...prev, category: value }))} value={formData.category}>
+                <SelectTrigger className="form-input h-8 text-sm">
                   <SelectValue placeholder="Select category" />
                 </SelectTrigger>
                 <SelectContent>
-                  {categories.map((category) => (
-                    <SelectItem key={category.id} value={category.name}>
-                      {category.name}
+                  {categories.map((cat) => (
+                    <SelectItem key={cat} value={cat}>
+                      {cat}
                     </SelectItem>
                   ))}
                 </SelectContent>
               </Select>
             </div>
-
-            <div className="space-y-2">
-              <Label className="text-sm font-medium">Stock Status</Label>
-              <div className="flex items-center space-x-2 p-3 rounded-lg bg-white/50 backdrop-blur-sm border border-white/20">
-                <Switch
-                  id="inStock"
-                  checked={formData.inStock}
-                  onCheckedChange={(checked) => setFormData(prev => ({ ...prev, inStock: checked }))}
-                />
-                <Label htmlFor="inStock" className="text-sm">
-                  {formData.inStock ? 'In Stock' : 'Out of Stock'}
-                </Label>
-              </div>
+          </div>
+          <div className="space-y-1">
+            <Label htmlFor="description" className="text-xs font-medium">Description</Label>
+            <Textarea id="description" value={formData.description} onChange={(e) => setFormData(prev => ({ ...prev, description: e.target.value }))} placeholder="Describe your product..." className="form-input min-h-[60px] h-16 text-sm resize-none" required />
+          </div>
+          <div className="space-y-1">
+            <Label className="text-xs font-medium">Stock Status</Label>
+            <div className="flex items-center space-x-2 p-1 rounded bg-white/50 border border-white/20">
+              <Switch id="inStock" checked={formData.inStock} onCheckedChange={(checked) => setFormData(prev => ({ ...prev, inStock: checked }))} />
+              <Label htmlFor="inStock" className="text-xs">{formData.inStock ? 'In Stock' : 'Out of Stock'}</Label>
             </div>
           </div>
-
-          <div className="space-y-2">
-            <Label className="text-sm font-medium">Product Image</Label>
+          <div className="space-y-1">
+            <Label className="text-xs font-medium">Product Image</Label>
             <div className="relative">
               {formData.image ? (
-                <div className="relative aspect-video bg-muted rounded-lg overflow-hidden border-2 border-dashed border-purple-200 hover:border-purple-300 transition-colors">
-                  <img 
-                    src={formData.image} 
-                    alt="Product preview" 
-                    className="w-full h-full object-cover"
-                  />
-                  <div className="absolute inset-0 bg-gradient-to-t from-black/20 via-transparent to-transparent opacity-0 hover:opacity-100 transition-opacity" />
-                  <Button
-                    type="button"
-                    variant="outline"
-                    size="sm"
-                    className="absolute top-2 right-2 bg-white/90 backdrop-blur-sm hover:bg-white transition-colors"
-                    onClick={() => setFormData(prev => ({ ...prev, image: '' }))}
-                  >
-                    Remove
-                  </Button>
+                <div className="relative aspect-video bg-muted rounded-lg overflow-hidden border-2 border-dashed border-purple-200 hover:border-purple-300 transition-colors h-24">
+                  <img src={formData.image} alt="Product preview" className="w-full h-full object-cover" />
+                  <Button type="button" variant="outline" size="sm" className="absolute top-2 right-2 bg-white/90 hover:bg-white transition-colors p-1 h-6 w-6" onClick={() => setFormData(prev => ({ ...prev, image: '' }))}>Remove</Button>
                 </div>
               ) : (
-                <div className="aspect-video bg-gradient-to-br from-purple-50 to-pink-50 rounded-lg border-2 border-dashed border-purple-200 hover:border-purple-300 transition-colors flex items-center justify-center">
+                <div className="aspect-video h-24 bg-gradient-to-br from-purple-50 to-pink-50 rounded-lg border-2 border-dashed border-purple-200 hover:border-purple-300 flex items-center justify-center">
                   <div className="text-center">
-                    <Upload className="mx-auto h-12 w-12 text-purple-400 mb-4" />
-                    <p className="text-sm text-muted-foreground mb-2">
-                      Click to upload or drag and drop
-                    </p>
-                    <p className="text-xs text-muted-foreground">
-                      PNG, JPG, GIF up to 10MB
-                    </p>
+                    <Upload className="mx-auto h-6 w-6 text-purple-400 mb-1" />
+                    <p className="text-xs text-muted-foreground mb-0">Click to upload or drag and drop</p>
+                    <p className="text-[10px] text-muted-foreground">PNG, JPG, GIF up to 10MB</p>
                   </div>
                 </div>
               )}
-              <Input
-                type="file"
-                accept="image/*"
-                onChange={handleImageUpload}
-                className="absolute inset-0 w-full h-full opacity-0 cursor-pointer"
-              />
+              <Input type="file" accept="image/*" onChange={handleImageUpload} className="absolute inset-0 w-full h-full opacity-0 cursor-pointer" />
             </div>
           </div>
-
-          <div className="flex justify-end space-x-2 pt-4">
-            <Button
-              type="button"
-              variant="outline"
-              onClick={() => setOpen(false)}
-              className="hover:bg-gradient-to-r hover:from-gray-50 hover:to-gray-100 border-gray-200 hover:border-gray-300 transition-all duration-300"
-            >
-              Cancel
-            </Button>
-            <Button 
-              type="submit"
-              className="btn-gradient hover:shadow-lg transition-all duration-300"
-            >
-              <Sparkles className="mr-2 h-4 w-4" />
-              Create Product
-            </Button>
+          <div className="flex justify-end space-x-2 pt-2">
+            <Button type="button" variant="outline" size="sm" onClick={() => { setOpen(false); onCancel && onCancel(); }} className="h-8 px-3 text-xs">Cancel</Button>
+            <Button type="submit" size="sm" className="btn-gradient h-8 px-3 text-xs"><Sparkles className="mr-1 h-4 w-4" />{isEdit ? 'Update' : 'Create'}</Button>
           </div>
         </form>
       </DialogContent>

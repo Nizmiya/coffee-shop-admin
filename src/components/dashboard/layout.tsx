@@ -19,6 +19,10 @@ import {
 import { Button } from '@/components/ui/button'
 import { useDashboardStore } from '@/lib/store/dashboard-store'
 import { Toaster } from '@/components/ui/sonner'
+import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from '@/components/ui/dropdown-menu'
+import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar'
+import { useAuthStore } from '@/lib/store/auth-store'
+import { useRouter } from 'next/navigation'
 
 const navigation = [
   { name: 'Dashboard', href: '/dashboard', icon: LayoutDashboard },
@@ -37,6 +41,8 @@ export default function DashboardLayout({ children }: DashboardLayoutProps) {
   const pathname = usePathname()
   const { theme, sidebarOpen, toggleTheme, toggleSidebar } = useDashboardStore()
   const [mounted, setMounted] = useState(false)
+  const { user, logout } = useAuthStore()
+  const router = useRouter()
 
   useEffect(() => {
     setMounted(true)
@@ -98,7 +104,7 @@ export default function DashboardLayout({ children }: DashboardLayoutProps) {
       <div className={`lg:pl-64 transition-all duration-300 ease-in-out`}>
         {/* Top bar */}
         <div className="sticky top-0 z-40 bg-background/80 backdrop-blur-md border-b border-border">
-          <div className="flex items-center justify-between h-16 px-4 sm:px-6 lg:px-8">
+          <div className="flex items-center justify-between h-14 px-3 sm:px-4">
             <div className="flex items-center">
               <Button
                 variant="ghost"
@@ -110,12 +116,12 @@ export default function DashboardLayout({ children }: DashboardLayoutProps) {
               </Button>
             </div>
             
-            <div className="flex items-center space-x-4">
+            <div className="flex items-center space-x-3">
               <Button
                 variant="ghost"
                 size="sm"
                 onClick={toggleTheme}
-                className="h-9 w-9 p-0 hover:bg-accent/50 rounded-full transition-all duration-300 hover:scale-110"
+                className="h-8 w-8 p-0 hover:bg-accent/50 rounded-full transition-all duration-300 hover:scale-110"
               >
                 {theme === 'dark' ? (
                   <Sun className="h-4 w-4" />
@@ -123,12 +129,36 @@ export default function DashboardLayout({ children }: DashboardLayoutProps) {
                   <Moon className="h-4 w-4" />
                 )}
               </Button>
+              {/* Profile Dropdown */}
+              <DropdownMenu>
+                <DropdownMenuTrigger asChild>
+                  <Avatar className="h-8 w-8 cursor-pointer border-2 border-purple-400">
+                    <AvatarImage src={user?.avatar || undefined} alt={user?.name || 'Admin'} />
+                    <AvatarFallback>{user?.name?.[0] || 'A'}</AvatarFallback>
+                  </Avatar>
+                </DropdownMenuTrigger>
+                <DropdownMenuContent align="end">
+                  <div className="px-3 py-2 text-xs text-muted-foreground">
+                    Signed in as<br />
+                    <span className="font-semibold text-foreground">{user?.name || 'Admin'}</span>
+                  </div>
+                  <DropdownMenuItem
+                    onClick={() => {
+                      logout()
+                      router.push('/login')
+                    }}
+                    className="text-red-600 cursor-pointer"
+                  >
+                    Logout
+                  </DropdownMenuItem>
+                </DropdownMenuContent>
+              </DropdownMenu>
             </div>
           </div>
         </div>
 
         {/* Page content */}
-        <main className="p-4 sm:p-6 lg:p-8">
+        <main className="p-3 sm:p-4">
           {children}
         </main>
       </div>

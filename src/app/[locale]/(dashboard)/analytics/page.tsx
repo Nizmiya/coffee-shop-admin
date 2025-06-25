@@ -2,21 +2,19 @@
 
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
 import { Badge } from '@/components/ui/badge'
-import { Button } from '@/components/ui/button'
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select'
 import { 
   BarChart3, 
   TrendingUp, 
-  TrendingDown, 
   DollarSign, 
   ShoppingCart, 
   Users, 
-  Package,
   Sparkles,
   Calendar,
   Target,
   Award,
-  Zap
+  Zap,
+  Building2
 } from 'lucide-react'
 import { 
   LineChart, 
@@ -34,22 +32,96 @@ import {
   AreaChart,
   Area
 } from 'recharts'
-import { analyticsData, salesData, productPerformance, customerMetrics } from '@/lib/mock-data'
+import { 
+  branches,
+  getBranchAnalyticsData, 
+  getBranchSalesData, 
+  getBranchProducts, 
+  getBranchCustomerMetrics 
+} from '@/lib/mock-data'
+import { useDashboardStore } from '@/lib/store/dashboard-store'
+import { BranchSelector } from '@/components/ui/branch-selector'
+import { useEffect } from 'react'
 
 const COLORS = ['#8b5cf6', '#ec4899', '#06b6d4', '#10b981', '#f59e0b', '#ef4444']
 
 export default function AnalyticsPage() {
+  const { selectedBranch, setSelectedBranch, setBranches, setCurrentUser } = useDashboardStore()
+
+  // Initialize store with branches and default user (admin)
+  useEffect(() => {
+    setBranches(branches)
+    setCurrentUser({
+      id: 'admin1',
+      name: 'Admin User',
+      email: 'admin@coffeeshop.com',
+      role: 'admin',
+      status: 'active',
+      avatar: 'https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=150&h=150&fit=crop&crop=face',
+      createdAt: new Date('2023-01-01'),
+      updatedAt: new Date('2024-01-01'),
+    })
+    if (!selectedBranch && branches.length > 0) {
+      setSelectedBranch(branches[0])
+    }
+    // eslint-disable-next-line
+  }, [])
+
+  // Get branch-specific data
+  const analyticsData = selectedBranch ? getBranchAnalyticsData(selectedBranch.id) : null
+  const salesData = selectedBranch ? getBranchSalesData(selectedBranch.id) : []
+  const productPerformance = selectedBranch ? getBranchProducts(selectedBranch.id).slice(0, 5).map(product => ({
+    productId: product.id,
+    productName: product.name,
+    sales: Math.floor(Math.random() * 50) + 10,
+    revenue: Math.floor(Math.random() * 200) + 50,
+    orders: Math.floor(Math.random() * 30) + 5,
+    branchId: selectedBranch.id
+  })) : []
+  const customerMetrics = selectedBranch ? getBranchCustomerMetrics() : []
+
+  if (!selectedBranch) {
+    return (
+      <div className="flex items-center justify-center h-64">
+        <div className="text-center">
+          <Building2 className="h-12 w-12 text-muted-foreground mx-auto mb-4" />
+          <h3 className="text-lg font-semibold mb-2">Select a Branch</h3>
+          <p className="text-muted-foreground">Please select a branch to view analytics</p>
+        </div>
+      </div>
+    )
+  }
+
+  if (!analyticsData) {
+    return (
+      <div className="flex items-center justify-center h-64">
+        <div className="text-center">
+          <BarChart3 className="h-12 w-12 text-muted-foreground mx-auto mb-4" />
+          <h3 className="text-lg font-semibold mb-2">No Analytics Data</h3>
+          <p className="text-muted-foreground">No analytics data available for this branch</p>
+        </div>
+      </div>
+    )
+  }
+
   return (
     <div className="space-y-6">
       <div className="relative">
         <div className="absolute -inset-1 bg-gradient-to-r from-purple-600 to-pink-600 rounded-lg blur opacity-25"></div>
         <div className="relative bg-gradient-to-r from-purple-600/10 to-pink-600/10 p-6 rounded-lg border border-purple-200/20">
-          <h1 className="text-3xl font-bold tracking-tight bg-gradient-to-r from-purple-600 to-pink-600 bg-clip-text text-transparent">
-            Analytics
-          </h1>
-          <p className="text-muted-foreground mt-2">
-            Comprehensive insights and performance metrics
-          </p>
+          <div className="flex items-center justify-between mb-4">
+            <div>
+              <h1 className="text-3xl font-bold tracking-tight bg-gradient-to-r from-purple-600 to-pink-600 bg-clip-text text-transparent">
+                Analytics - {selectedBranch.name}
+              </h1>
+              <p className="text-muted-foreground mt-2">
+                Comprehensive insights and performance metrics
+              </p>
+            </div>
+            <div className="w-64">
+              <BranchSelector branches={branches} />
+            </div>
+          </div>
           <div className="absolute top-4 right-4">
             <Sparkles className="h-6 w-6 text-purple-400 animate-pulse" />
           </div>
@@ -143,7 +215,7 @@ export default function AnalyticsPage() {
               <div>
                 <CardTitle className="flex items-center">
                   <BarChart3 className="mr-2 h-5 w-5 text-purple-500" />
-                  Revenue Trends
+                  Revenue Trends - {selectedBranch.name}
                 </CardTitle>
                 <CardDescription>
                   Monthly revenue performance over time
@@ -210,7 +282,7 @@ export default function AnalyticsPage() {
           <CardHeader>
             <CardTitle className="flex items-center">
               <Award className="mr-2 h-5 w-5 text-orange-500" />
-              Top Products
+              Top Products - {selectedBranch.name}
             </CardTitle>
             <CardDescription>
               Best performing products by revenue
@@ -220,16 +292,16 @@ export default function AnalyticsPage() {
             <ResponsiveContainer width="100%" height={350}>
               <PieChart>
                 <Pie
-                  data={productPerformance.slice(0, 5)}
+                  data={productPerformance}
                   cx="50%"
                   cy="50%"
                   labelLine={false}
-                  label={({ name, percent }) => `${name} ${(percent * 100).toFixed(0)}%`}
+                  label={({ name, percent }) => `${name} ${((percent || 0) * 100).toFixed(0)}%`}
                   outerRadius={80}
                   fill="#8884d8"
                   dataKey="revenue"
                 >
-                  {productPerformance.slice(0, 5).map((entry, index) => (
+                  {productPerformance.map((entry, index) => (
                     <Cell key={`cell-${index}`} fill={COLORS[index % COLORS.length]} />
                   ))}
                 </Pie>
@@ -253,7 +325,7 @@ export default function AnalyticsPage() {
           <CardHeader>
             <CardTitle className="flex items-center">
               <Zap className="mr-2 h-5 w-5 text-yellow-500" />
-              Order Volume
+              Order Volume - {selectedBranch.name}
             </CardTitle>
             <CardDescription>
               Daily order volume trends
@@ -304,7 +376,7 @@ export default function AnalyticsPage() {
           <CardHeader>
             <CardTitle className="flex items-center">
               <Users className="mr-2 h-5 w-5 text-blue-500" />
-              Customer Metrics
+              Customer Metrics - {selectedBranch.name}
             </CardTitle>
             <CardDescription>
               Customer acquisition and retention
@@ -363,7 +435,7 @@ export default function AnalyticsPage() {
           <CardHeader>
             <CardTitle className="flex items-center">
               <TrendingUp className="mr-2 h-5 w-5 text-green-500" />
-              Growth Metrics
+              Growth Metrics - {selectedBranch.name}
             </CardTitle>
             <CardDescription>
               Key performance indicators
@@ -406,7 +478,7 @@ export default function AnalyticsPage() {
           <CardHeader>
             <CardTitle className="flex items-center">
               <Calendar className="mr-2 h-5 w-5 text-purple-500" />
-              Time Analysis
+              Time Analysis - {selectedBranch.name}
             </CardTitle>
             <CardDescription>
               Peak hours and busy periods
@@ -458,7 +530,7 @@ export default function AnalyticsPage() {
           <CardHeader>
             <CardTitle className="flex items-center">
               <Target className="mr-2 h-5 w-5 text-red-500" />
-              Goals & Targets
+              Goals & Targets - {selectedBranch.name}
             </CardTitle>
             <CardDescription>
               Monthly targets and achievements
