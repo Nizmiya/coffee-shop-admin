@@ -79,10 +79,10 @@ export default function ProductsPage() {
 
   useEffect(() => {
     if (selectedBranchView && selectedBranchView !== 'all') {
-      const uniqueCategories = [...new Set(getProducts(selectedBranchView.id).map(p => p.category))]
+      const uniqueCategories = [...new Set(getProducts(selectedBranchView.id).map(p => p.category))].filter(Boolean)
       setCategories(uniqueCategories)
     } else if (selectedBranchView === 'all') {
-      const uniqueCategories = [...new Set(getAllProducts().map(p => p.category))]
+      const uniqueCategories = [...new Set(getAllProducts().map(p => p.category))].filter(Boolean)
       setCategories(uniqueCategories)
     }
   }, [selectedBranchView, productsByBranch])
@@ -114,20 +114,20 @@ export default function ProductsPage() {
   }
 
   const handleUpdateProduct = (updatedData: Omit<Product, 'id' | 'createdAt' | 'updatedAt'>) => {
-    if (!selectedBranchView || !editProduct) return
+    if (!editProduct || !editProduct.branchId) return
     const updatedProduct: Product = {
       ...editProduct,
       ...updatedData,
       updatedAt: new Date()
     }
-    updateProduct(selectedBranchView, updatedProduct)
+    updateProduct(editProduct.branchId, updatedProduct)
     setEditProduct(null)
     setFormOpen(false)
   }
 
   const handleDeleteProduct = (product: Product) => {
-    if (!selectedBranchView) return
-    deleteProduct(selectedBranchView, product.id)
+    if (!product.branchId) return
+    deleteProduct(product.branchId, product.id)
   }
 
   return (

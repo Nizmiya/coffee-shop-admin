@@ -117,7 +117,7 @@ export default function DashboardPage() {
 
   const quickActions = [
     { name: 'New Order', path: '/orders?action=new', icon: ShoppingCart },
-    { name: 'Add Product', path: '/products?action=new', icon: Package },
+    ...(selectedBranchView === 'all' ? [{ name: 'Add Product', path: '/products?action=new', icon: Package }] : []),
     { name: 'Add Customer', path: '/customers?action=new', icon: Users },
     { name: 'View Analytics', path: '/analytics', icon: BarChart3 },
   ]
