@@ -729,6 +729,7 @@ export const getDataByBranchView = (branchView: string) => {
   if (branchView === 'all') {
     return {
       stats: getAllBranchStats(),
+      analytics: getAllBranchAnalyticsData(),
       salesData: getBranchSalesData('all'),
       products: [...getBranchProducts('jaffna'), ...getBranchProducts('colombo')],
       orders: [...getBranchOrders('jaffna'), ...getBranchOrders('colombo')],
@@ -740,6 +741,7 @@ export const getDataByBranchView = (branchView: string) => {
   if (branchView === 'jaffna' || branchView === 'colombo') {
     return {
       stats: getBranchStats(branchView),
+      analytics: getBranchAnalyticsData(branchView),
       salesData: getBranchSalesData(branchView),
       products: getBranchProducts(branchView),
       orders: getBranchOrders(branchView),

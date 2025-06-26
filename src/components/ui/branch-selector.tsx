@@ -29,23 +29,39 @@ interface BranchSelectorProps {
 
 export function BranchSelector({ branches, className, selectedBranchId, onBranchSelect }: BranchSelectorProps) {
   const [open, setOpen] = useState(false)
-  const { selectedBranch, setSelectedBranch, currentUser, canAccessBranch } = useDashboardStore()
+  const { selectedBranch, setSelectedBranch, setSelectedBranchView, currentUser, canAccessBranch } = useDashboardStore()
 
   // All branches are always accessible
   const accessibleBranches = branches
 
+  // Add a pseudo-branch for 'All Branches'
+  const allBranchesOption: Branch = {
+    id: 'all',
+    name: 'All Branches',
+    location: '',
+    address: '',
+    phone: '',
+    email: '',
+    managerId: '',
+    status: 'active',
+    createdAt: new Date(),
+    updatedAt: new Date(),
+  }
+
   // Use controlled selectedBranchId if provided, else fallback to Zustand
   const currentSelected = selectedBranchId
-    ? branches.find(b => b.id === selectedBranchId)
+    ? (selectedBranchId === 'all' ? allBranchesOption : branches.find(b => b.id === selectedBranchId))
     : selectedBranch
 
   const handleBranchSelect = (branch: Branch) => {
+    if (branch.id === 'all') {
+      setSelectedBranchView('all')
+    } else {
+      setSelectedBranchView(branch.id)
+      setSelectedBranch(branch)
+    }
     if (onBranchSelect) {
       onBranchSelect(branch)
-    } else {
-      // Always use the branch object from Zustand's branches array by id
-      const zustandBranch = branches.find(b => b.id === branch.id) || branch
-      setSelectedBranch(zustandBranch)
     }
     setOpen(false)
   }
@@ -82,6 +98,26 @@ export function BranchSelector({ branches, className, selectedBranchId, onBranch
           <CommandList>
             <CommandEmpty>No branch found.</CommandEmpty>
             <CommandGroup>
+              {/* All Branches option */}
+              <CommandItem
+                key={allBranchesOption.id}
+                value={allBranchesOption.id}
+                onSelect={() => handleBranchSelect(allBranchesOption)}
+                className="cursor-pointer !opacity-100 !pointer-events-auto"
+                aria-disabled={false}
+              >
+                <Check
+                  className={cn(
+                    "mr-2 h-4 w-4",
+                    currentSelected?.id === allBranchesOption.id ? "opacity-100" : "opacity-0"
+                  )}
+                />
+                <div className="flex flex-col">
+                  <span className="font-medium">{allBranchesOption.name}</span>
+                  <span className="text-sm text-muted-foreground">All locations</span>
+                </div>
+              </CommandItem>
+              {/* Individual branches */}
               {accessibleBranches.map((branch) => (
                 <CommandItem
                   key={branch.id}
