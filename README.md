@@ -42,7 +42,7 @@ Settings & Configuration
 - User profile management
 - Store information configuration
 - Notification preferences
-- Theme customization (Light/Dark mode)
+- Theme customization 
 - Security settings
 
 UI/UX Features
@@ -56,15 +56,13 @@ UI/UX Features
 
 Tech Stack
 
-- Framework: Next.js 15 (App Router)
+- Framework: Next.js 
 - Language: TypeScript
 - Styling: Tailwind CSS
 - UI Components: ShadCN UI
-- Charts: Recharts
 - Icons: Lucide React
-- State Management: Zustand
-- Forms: React Hook Form + Zod
-- Notifications: Sonner
+
+
 
 
 
