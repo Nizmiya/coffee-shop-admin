@@ -1,6 +1,7 @@
 import { create } from 'zustand'
 import { persist } from 'zustand/middleware'
 import { Branch, User, BranchStats } from '@/lib/types'
+import { branches as initialBranches } from '@/lib/mock-data'
 
 interface Notification {
   id: string
@@ -18,7 +19,7 @@ interface DashboardStore {
   
   // Branch management
   selectedBranch: Branch | null
-  selectedBranchView: 'all' | 'jaffna' | 'colombo'
+  selectedBranchView: string
   branches: Branch[]
   currentUser: User | null
   
@@ -32,7 +33,7 @@ interface DashboardStore {
   addNotification: (notification: Omit<Notification, 'id'>) => void
   removeNotification: (id: string) => void
   setSelectedBranch: (branch: Branch) => void
-  setSelectedBranchView: (view: 'all' | 'jaffna' | 'colombo') => void
+  setSelectedBranchView: (view: string) => void
   setBranches: (branches: Branch[]) => void
   setCurrentUser: (user: User) => void
   setBranchStats: (stats: BranchStats) => void
@@ -56,7 +57,7 @@ export const useDashboardStore = create<DashboardStore>()(
       // Branch management
       selectedBranch: null,
       selectedBranchView: 'all',
-      branches: [],
+      branches: initialBranches,
       currentUser: null,
       
       // Branch stats

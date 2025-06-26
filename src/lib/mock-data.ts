@@ -725,56 +725,50 @@ export const getAllBranchAnalyticsData = () => {
 }
 
 // Updated function to get data based on branch view
-export const getDataByBranchView = (branchView: 'all' | 'jaffna' | 'colombo') => {
-  switch (branchView) {
-    case 'all':
-      return {
-        stats: getAllBranchStats(), // For Dashboard
-        analytics: getAllBranchAnalyticsData(), // For Analytics Page
-        products: products, // All products
-        orders: orders, // All orders
-        customers: customers, // All customers
-        salesData: salesData, // All sales data
-        inventoryAlerts: inventoryAlerts, // All alerts
-        customerMetrics: getBranchCustomerMetrics(),
-      }
-    case 'jaffna':
-      return {
-        stats: getBranchStats('jaffna'),
-        analytics: getBranchAnalyticsData('jaffna'),
-        products: getBranchProducts('jaffna'),
-        orders: getBranchOrders('jaffna'),
-        customers: getBranchCustomers('jaffna'),
-        salesData: getBranchSalesData('jaffna'),
-        inventoryAlerts: getBranchInventoryAlerts('jaffna'),
-        customerMetrics: getBranchCustomerMetrics(),
-      }
-    case 'colombo':
-      return {
-        stats: getBranchStats('colombo'),
-        analytics: getBranchAnalyticsData('colombo'),
-        products: getBranchProducts('colombo'),
-        orders: getBranchOrders('colombo'),
-        customers: getBranchCustomers('colombo'),
-        salesData: getBranchSalesData('colombo'),
-        inventoryAlerts: getBranchInventoryAlerts('colombo'),
-        customerMetrics: getBranchCustomerMetrics(),
-      }
-    default:
-      return {
-        stats: getAllBranchStats(),
-        analytics: getAllBranchAnalyticsData(),
-        products: products,
-        orders: orders,
-        customers: customers,
-        salesData: salesData,
-        inventoryAlerts: inventoryAlerts,
-        customerMetrics: getBranchCustomerMetrics(),
-      }
+export const getDataByBranchView = (branchView: string) => {
+  if (branchView === 'all') {
+    return {
+      stats: getAllBranchStats(),
+      salesData: getBranchSalesData('all'),
+      products: [...getBranchProducts('jaffna'), ...getBranchProducts('colombo')],
+      orders: [...getBranchOrders('jaffna'), ...getBranchOrders('colombo')],
+      customers: [...getBranchCustomers('jaffna'), ...getBranchCustomers('colombo')],
+      inventoryAlerts: [...getBranchInventoryAlerts('jaffna'), ...getBranchInventoryAlerts('colombo')],
+    }
+  }
+
+  if (branchView === 'jaffna' || branchView === 'colombo') {
+    return {
+      stats: getBranchStats(branchView),
+      salesData: getBranchSalesData(branchView),
+      products: getBranchProducts(branchView),
+      orders: getBranchOrders(branchView),
+      customers: getBranchCustomers(branchView),
+      inventoryAlerts: getBranchInventoryAlerts(branchView),
+    }
+  }
+
+  // Default for new/unrecognized branches
+  return {
+    stats: {
+      totalSales: 0,
+      totalOrders: 0,
+      totalCustomers: 0,
+      monthlyGrowth: 0,
+      todayOrders: 0,
+    },
+    salesData: [],
+    products: [],
+    orders: [],
+    customers: [],
+    inventoryAlerts: [],
   }
 }
 
 export const getBranchSalesData = (branchId: string): SalesData[] => {
+  if (branchId === 'all') {
+    return salesData
+  }
   return salesData.filter(data => data.branchId === branchId)
 }
 

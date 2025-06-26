@@ -1,7 +1,7 @@
 'use client'
 
 import { useState } from 'react'
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
+import { Card, CardContent, CardDescription, CardHeader, CardTitle, CardFooter } from '@/components/ui/card'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
@@ -9,6 +9,8 @@ import { Switch } from '@/components/ui/switch'
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select'
 import { Separator } from '@/components/ui/separator'
 import { useSettingsStore } from '@/lib/store/settings-store'
+import { useDashboardStore } from '@/lib/store/dashboard-store'
+import BranchForm from '@/components/forms/branch-form'
 import { toast } from 'sonner'
 import { 
   Bell, 
@@ -27,11 +29,19 @@ import {
   MapPin,
   Clock,
   CreditCard,
-  Trash2
+  Trash2,
+  Building2,
+  Plus
 } from 'lucide-react'
 
 export default function SettingsPage() {
   const [showPassword, setShowPassword] = useState(false)
+  const [formOpen, setFormOpen] = useState(false)
+  const {
+    branches,
+    addBranch,
+    selectedBranchView,
+  } = useDashboardStore()
   const {
     businessName,
     email,
@@ -156,6 +166,22 @@ export default function SettingsPage() {
     input.click()
   }
 
+  const handleSaveBranch = (data: any) => {
+    const newBranch = {
+      ...data,
+      id: data.name.toLowerCase().replace(/\\s+/g, '-'),
+      status: 'active',
+      createdAt: new Date(),
+      updatedAt: new Date(),
+      managerId: '',
+    };
+    addBranch(newBranch);
+    setFormOpen(false);
+    toast.success('Branch Created', {
+      description: `The ${newBranch.name} has been successfully created.`,
+    })
+  }
+
   return (
     <div className="space-y-6">
       <div className="relative">
@@ -207,6 +233,45 @@ export default function SettingsPage() {
           Import Settings
         </Button>
       </div>
+
+      <Separator />
+
+      {selectedBranchView === 'all' && (
+        <Card>
+          <CardHeader>
+            <CardTitle className="flex items-center">
+              <Building2 className="mr-2 h-5 w-5 text-purple-500" />
+              Branch Management
+            </CardTitle>
+            <CardDescription>
+              View and manage your business branches.
+            </CardDescription>
+          </CardHeader>
+          <CardContent>
+            <div className="space-y-4">
+              {branches.map((branch) => (
+                <div key={branch.id} className="flex items-center justify-between p-3 rounded-lg bg-secondary/50">
+                  <div>
+                    <h4 className="font-semibold">{branch.name}</h4>
+                    <p className="text-sm text-muted-foreground">{branch.location}</p>
+                  </div>
+                  <Button variant="outline" size="sm" disabled>
+                    Edit
+                  </Button>
+                </div>
+              ))}
+            </div>
+          </CardContent>
+          <CardFooter className="border-t p-4">
+            <BranchForm 
+              onSave={handleSaveBranch}
+              onCancel={() => setFormOpen(false)}
+              open={formOpen}
+              setOpen={setFormOpen}
+            />
+          </CardFooter>
+        </Card>
+      )}
 
       <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
         {/* Business Information */}
