@@ -11,6 +11,7 @@ import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle, Di
 import { Plus, Upload, Coffee, Sparkles } from 'lucide-react'
 import { categories as mockCategories } from '@/lib/mock-data'
 import { Product } from '@/lib/types'
+import { BranchSelector } from '@/components/ui/branch-selector'
 
 interface ProductFormProps {
   onSave: (data: Omit<Product, 'id' | 'createdAt' | 'updatedAt'>) => void
@@ -20,9 +21,12 @@ interface ProductFormProps {
   initialData?: Product
   branchId?: string
   categories: string[]
+  showBranchSelect?: boolean
+  branches?: { id: string; name: string }[]
+  onBranchChange?: (branchId: string) => void
 }
 
-export default function ProductForm({ onSave, onCancel, open, setOpen, initialData, branchId, categories }: ProductFormProps) {
+export default function ProductForm({ onSave, onCancel, open, setOpen, initialData, branchId, categories, showBranchSelect = false, branches = [], onBranchChange }: ProductFormProps) {
   const isEdit = !!initialData
   const [formData, setFormData] = useState({
     name: initialData?.name || '',
@@ -32,7 +36,7 @@ export default function ProductForm({ onSave, onCancel, open, setOpen, initialDa
     image: initialData?.image || '',
     inStock: initialData?.inStock ?? true,
     stockQuantity: initialData?.stockQuantity ?? 0,
-    branchId: branchId || initialData?.branchId || ''
+    branchId: branchId || initialData?.branchId || (showBranchSelect && branches.length > 0 ? branches[0].id : '')
   })
 
   useEffect(() => {
@@ -44,9 +48,9 @@ export default function ProductForm({ onSave, onCancel, open, setOpen, initialDa
       image: initialData?.image || '',
       inStock: initialData?.inStock ?? true,
       stockQuantity: initialData?.stockQuantity ?? 0,
-      branchId: branchId || initialData?.branchId || ''
+      branchId: branchId || initialData?.branchId || (showBranchSelect && branches.length > 0 ? branches[0].id : '')
     })
-  }, [initialData, branchId])
+  }, [initialData, branchId, showBranchSelect, branches])
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault()
@@ -98,6 +102,20 @@ export default function ProductForm({ onSave, onCancel, open, setOpen, initialDa
           </DialogDescription>
         </DialogHeader>
         <form onSubmit={handleSubmit} className="space-y-3">
+          {showBranchSelect && (
+            <div className="space-y-1">
+              <Label htmlFor="branchId" className="text-xs font-medium">Select Branch</Label>
+              <BranchSelector
+                branches={branches.map(b => ({ ...b, location: b.name }))}
+                className="w-full"
+                selectedBranchId={formData.branchId}
+                onBranchSelect={(branch) => {
+                  setFormData(prev => ({ ...prev, branchId: branch.id }))
+                  if (onBranchChange) onBranchChange(branch.id)
+                }}
+              />
+            </div>
+          )}
           <div className="grid gap-2 grid-cols-2">
             <div className="space-y-1">
               <Label htmlFor="name" className="text-xs font-medium">Product Name</Label>

@@ -37,16 +37,16 @@ import {
   getBranchAnalyticsData, 
   getBranchSalesData, 
   getBranchProducts, 
-  getBranchCustomerMetrics 
+  getBranchCustomerMetrics,
+  getDataByBranchView
 } from '@/lib/mock-data'
 import { useDashboardStore } from '@/lib/store/dashboard-store'
-import { BranchSelector } from '@/components/ui/branch-selector'
 import { useEffect } from 'react'
 
 const COLORS = ['#8b5cf6', '#ec4899', '#06b6d4', '#10b981', '#f59e0b', '#ef4444']
 
 export default function AnalyticsPage() {
-  const { selectedBranch, setSelectedBranch, setBranches, setCurrentUser } = useDashboardStore()
+  const { setBranches, setCurrentUser, selectedBranchView } = useDashboardStore()
 
   // Initialize store with branches and default user (admin)
   useEffect(() => {
@@ -61,36 +61,30 @@ export default function AnalyticsPage() {
       createdAt: new Date('2023-01-01'),
       updatedAt: new Date('2024-01-01'),
     })
-    if (!selectedBranch && branches.length > 0) {
-      setSelectedBranch(branches[0])
-    }
     // eslint-disable-next-line
   }, [])
 
-  // Get branch-specific data
-  const analyticsData = selectedBranch ? getBranchAnalyticsData(selectedBranch.id) : null
-  const salesData = selectedBranch ? getBranchSalesData(selectedBranch.id) : []
-  const productPerformance = selectedBranch ? getBranchProducts(selectedBranch.id).slice(0, 5).map(product => ({
+  // Get data based on selectedBranchView
+  const data = getDataByBranchView(selectedBranchView)
+  const analyticsData = data.analytics
+  const salesData = data.salesData
+  const allProducts = data.products
+  const productPerformance = allProducts.slice(0, 5).map(product => ({
     productId: product.id,
     productName: product.name,
     sales: Math.floor(Math.random() * 50) + 10,
     revenue: Math.floor(Math.random() * 200) + 50,
     orders: Math.floor(Math.random() * 30) + 5,
-    branchId: selectedBranch.id
-  })) : []
-  const customerMetrics = selectedBranch ? getBranchCustomerMetrics() : []
+    branchId: product.branchId
+  }))
+  const customerMetrics = data.customerMetrics || []
 
-  if (!selectedBranch) {
-    return (
-      <div className="flex items-center justify-center h-64">
-        <div className="text-center">
-          <Building2 className="h-12 w-12 text-muted-foreground mx-auto mb-4" />
-          <h3 className="text-lg font-semibold mb-2">Select a Branch</h3>
-          <p className="text-muted-foreground">Please select a branch to view analytics</p>
-        </div>
-      </div>
-    )
-  }
+  // Branch label for heading
+  const branchLabel = selectedBranchView === 'all'
+    ? 'All Branches'
+    : selectedBranchView === 'jaffna'
+      ? 'Jaffna Branch'
+      : 'Colombo Branch'
 
   if (!analyticsData) {
     return (
@@ -112,14 +106,11 @@ export default function AnalyticsPage() {
           <div className="flex items-center justify-between mb-4">
             <div>
               <h1 className="text-3xl font-bold tracking-tight bg-gradient-to-r from-purple-600 to-pink-600 bg-clip-text text-transparent">
-                Analytics - {selectedBranch.name}
+                Analytics - {branchLabel}
               </h1>
               <p className="text-muted-foreground mt-2">
                 Comprehensive insights and performance metrics
               </p>
-            </div>
-            <div className="w-64">
-              <BranchSelector branches={branches} />
             </div>
           </div>
           <div className="absolute top-4 right-4">
@@ -215,7 +206,7 @@ export default function AnalyticsPage() {
               <div>
                 <CardTitle className="flex items-center">
                   <BarChart3 className="mr-2 h-5 w-5 text-purple-500" />
-                  Revenue Trends - {selectedBranch.name}
+                  Revenue Trends - {branchLabel}
                 </CardTitle>
                 <CardDescription>
                   Monthly revenue performance over time
@@ -236,7 +227,7 @@ export default function AnalyticsPage() {
           </CardHeader>
           <CardContent>
             <ResponsiveContainer width="100%" height={350}>
-              <AreaChart data={salesData}>
+              <AreaChart data={data.salesData}>
                 <CartesianGrid strokeDasharray="3 3" stroke="rgba(139, 92, 246, 0.1)" />
                 <XAxis 
                   dataKey="date" 
@@ -282,7 +273,7 @@ export default function AnalyticsPage() {
           <CardHeader>
             <CardTitle className="flex items-center">
               <Award className="mr-2 h-5 w-5 text-orange-500" />
-              Top Products - {selectedBranch.name}
+              Top Products - {branchLabel}
             </CardTitle>
             <CardDescription>
               Best performing products by revenue
@@ -325,7 +316,7 @@ export default function AnalyticsPage() {
           <CardHeader>
             <CardTitle className="flex items-center">
               <Zap className="mr-2 h-5 w-5 text-yellow-500" />
-              Order Volume - {selectedBranch.name}
+              Order Volume - {branchLabel}
             </CardTitle>
             <CardDescription>
               Daily order volume trends
@@ -333,7 +324,7 @@ export default function AnalyticsPage() {
           </CardHeader>
           <CardContent>
             <ResponsiveContainer width="100%" height={300}>
-              <BarChart data={salesData}>
+              <BarChart data={data.salesData}>
                 <CartesianGrid strokeDasharray="3 3" stroke="rgba(139, 92, 246, 0.1)" />
                 <XAxis 
                   dataKey="date" 
@@ -376,7 +367,7 @@ export default function AnalyticsPage() {
           <CardHeader>
             <CardTitle className="flex items-center">
               <Users className="mr-2 h-5 w-5 text-blue-500" />
-              Customer Metrics - {selectedBranch.name}
+              Customer Metrics - {branchLabel}
             </CardTitle>
             <CardDescription>
               Customer acquisition and retention
@@ -384,7 +375,7 @@ export default function AnalyticsPage() {
           </CardHeader>
           <CardContent>
             <ResponsiveContainer width="100%" height={300}>
-              <LineChart data={customerMetrics}>
+              <LineChart data={data.customerMetrics}>
                 <CartesianGrid strokeDasharray="3 3" stroke="rgba(139, 92, 246, 0.1)" />
                 <XAxis 
                   dataKey="month" 
@@ -435,7 +426,7 @@ export default function AnalyticsPage() {
           <CardHeader>
             <CardTitle className="flex items-center">
               <TrendingUp className="mr-2 h-5 w-5 text-green-500" />
-              Growth Metrics - {selectedBranch.name}
+              Growth Metrics - {branchLabel}
             </CardTitle>
             <CardDescription>
               Key performance indicators
@@ -478,7 +469,7 @@ export default function AnalyticsPage() {
           <CardHeader>
             <CardTitle className="flex items-center">
               <Calendar className="mr-2 h-5 w-5 text-purple-500" />
-              Time Analysis - {selectedBranch.name}
+              Time Analysis - {branchLabel}
             </CardTitle>
             <CardDescription>
               Peak hours and busy periods
@@ -530,7 +521,7 @@ export default function AnalyticsPage() {
           <CardHeader>
             <CardTitle className="flex items-center">
               <Target className="mr-2 h-5 w-5 text-red-500" />
-              Goals & Targets - {selectedBranch.name}
+              Goals & Targets - {branchLabel}
             </CardTitle>
             <CardDescription>
               Monthly targets and achievements

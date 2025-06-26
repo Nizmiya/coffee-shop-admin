@@ -23,19 +23,30 @@ import { useDashboardStore } from '@/lib/store/dashboard-store'
 interface BranchSelectorProps {
   branches: Branch[]
   className?: string
+  selectedBranchId?: string
+  onBranchSelect?: (branch: Branch) => void
 }
 
-export function BranchSelector({ branches, className }: BranchSelectorProps) {
+export function BranchSelector({ branches, className, selectedBranchId, onBranchSelect }: BranchSelectorProps) {
   const [open, setOpen] = useState(false)
   const { selectedBranch, setSelectedBranch, currentUser, canAccessBranch } = useDashboardStore()
 
   // All branches are always accessible
   const accessibleBranches = branches
 
+  // Use controlled selectedBranchId if provided, else fallback to Zustand
+  const currentSelected = selectedBranchId
+    ? branches.find(b => b.id === selectedBranchId)
+    : selectedBranch
+
   const handleBranchSelect = (branch: Branch) => {
-    // Always use the branch object from Zustand's branches array by id
-    const zustandBranch = branches.find(b => b.id === branch.id) || branch
-    setSelectedBranch(zustandBranch)
+    if (onBranchSelect) {
+      onBranchSelect(branch)
+    } else {
+      // Always use the branch object from Zustand's branches array by id
+      const zustandBranch = branches.find(b => b.id === branch.id) || branch
+      setSelectedBranch(zustandBranch)
+    }
     setOpen(false)
   }
 
@@ -59,7 +70,7 @@ export function BranchSelector({ branches, className }: BranchSelectorProps) {
           <div className="flex items-center gap-2">
             <Building2 className="h-4 w-4 text-purple-600" />
             <span className="font-medium">
-              {selectedBranch ? selectedBranch.name : "Select Branch..."}
+              {currentSelected ? currentSelected.name : "Select Branch..."}
             </span>
           </div>
           <ChevronsUpDown className="ml-2 h-4 w-4 shrink-0 opacity-50" />
@@ -82,7 +93,7 @@ export function BranchSelector({ branches, className }: BranchSelectorProps) {
                   <Check
                     className={cn(
                       "mr-2 h-4 w-4",
-                      selectedBranch?.id === branch.id ? "opacity-100" : "opacity-0"
+                      currentSelected?.id === branch.id ? "opacity-100" : "opacity-0"
                     )}
                   />
                   <div className="flex flex-col">

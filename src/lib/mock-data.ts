@@ -85,7 +85,7 @@ export const products: Product[] = [
     description: 'Single shot of premium espresso with rich, bold flavor',
     price: 3.50,
     category: 'Hot Drinks',
-    image: '/assets/products/espresso.jpg',
+    image: 'https://images.unsplash.com/photo-1511920170033-f8396924c348?w=400',
     inStock: true,
     stockQuantity: 50,
     branchId: 'jaffna',
@@ -98,7 +98,7 @@ export const products: Product[] = [
     description: 'Espresso with steamed milk and velvety foam',
     price: 4.50,
     category: 'Hot Drinks',
-    image: '/assets/products/cappuccino.jpg',
+    image: 'https://images.unsplash.com/photo-1519125323398-675f0ddb6308?w=400',
     inStock: true,
     stockQuantity: 45,
     branchId: 'jaffna',
@@ -111,7 +111,7 @@ export const products: Product[] = [
     description: 'Smooth espresso with steamed milk and a light layer of foam',
     price: 4.75,
     category: 'Hot Drinks',
-    image: '/assets/products/iced-latte.jpg',
+    image: 'https://images.unsplash.com/photo-1504674900247-0877df9cc836?w=400',
     inStock: true,
     stockQuantity: 40,
     branchId: 'jaffna',
@@ -124,7 +124,7 @@ export const products: Product[] = [
     description: 'Espresso, chocolate, and steamed milk.',
     price: 4.0,
     category: 'Hot Drinks',
-    image: '/assets/products/Mocha.jpg',
+    image: 'https://images.unsplash.com/photo-1464306076886-debca5e8a6b0?w=400',
     inStock: true,
     stockQuantity: 18,
     branchId: 'jaffna',
@@ -137,7 +137,7 @@ export const products: Product[] = [
     description: 'Chilled coffee served over ice with optional cream',
     price: 4.00,
     category: 'Cold Beverages',
-    image: '/assets/products/iced-coffee.jpg',
+    image: 'https://images.unsplash.com/photo-1465101046530-73398c7f28ca?w=400',
     inStock: true,
     stockQuantity: 35,
     branchId: 'jaffna',
@@ -150,7 +150,7 @@ export const products: Product[] = [
     description: 'Freshly baked muffin with blueberries.',
     price: 2.8,
     category: 'Bakery',
-    image: '/assets/products/blueberry-muffins-10.jpg',
+    image: 'https://images.unsplash.com/photo-1502741338009-cac2772e18bc?w=400',
     inStock: true,
     stockQuantity: 12,
     branchId: 'jaffna',
@@ -163,7 +163,7 @@ export const products: Product[] = [
     description: 'Flaky croissant with chocolate filling.',
     price: 3.2,
     category: 'Bakery',
-    image: '/assets/products/chocolate-croissant.jpg',
+    image: 'https://images.unsplash.com/photo-1505250469679-203ad9ced0cb?w=400',
     inStock: true,
     stockQuantity: 10,
     branchId: 'jaffna',
@@ -176,7 +176,7 @@ export const products: Product[] = [
     description: 'Refreshing and healthy green tea.',
     price: 2.2,
     category: 'Tea',
-    image: '/assets/products/green tea.jpg',
+    image: 'https://images.unsplash.com/photo-1504674900247-0877df9cc836?w=400',
     inStock: true,
     stockQuantity: 15,
     branchId: 'jaffna',
@@ -189,7 +189,7 @@ export const products: Product[] = [
     description: 'Moist carrot cake with cream cheese frosting.',
     price: 3.5,
     category: 'Bakery',
-    image: '/assets/products/carrot cake.jpg',
+    image: 'https://images.unsplash.com/photo-1504674900247-0877df9cc836?w=400',
     inStock: true,
     stockQuantity: 8,
     branchId: 'jaffna',
@@ -202,7 +202,7 @@ export const products: Product[] = [
     description: 'Freshly baked bagel, perfect for breakfast.',
     price: 2.0,
     category: 'Bakery',
-    image: '/assets/products/bagel.jpg',
+    image: 'https://images.unsplash.com/photo-1506784983877-45594efa4cbe?w=400',
     inStock: true,
     stockQuantity: 14,
     branchId: 'jaffna',
@@ -215,7 +215,7 @@ export const products: Product[] = [
     description: 'Fruit smoothie, healthy and refreshing.',
     price: 3.7,
     category: 'Cold Drinks',
-    image: '/assets/products/Smoothie.jpg',
+    image: 'https://images.unsplash.com/photo-1502741338009-cac2772e18bc?w=400',
     inStock: true,
     stockQuantity: 16,
     branchId: 'jaffna',
@@ -228,7 +228,7 @@ export const products: Product[] = [
     description: 'Rich and creamy hot chocolate.',
     price: 2.9,
     category: 'Hot Drinks',
-    image: '/assets/products/Hot Chocolate.jpg',
+    image: 'https://images.unsplash.com/photo-1515442261605-cd4ce40f1d89?w=400',
     inStock: true,
     stockQuantity: 11,
     branchId: 'jaffna',
@@ -241,7 +241,7 @@ export const products: Product[] = [
     description: 'Classic glazed donut, sweet and soft.',
     price: 1.8,
     category: 'Bakery',
-    image: '/assets/products/donut.jpg',
+    image: 'https://images.unsplash.com/photo-1502741338009-cac2772e18bc?w=400',
     inStock: true,
     stockQuantity: 20,
     branchId: 'jaffna',
@@ -255,7 +255,7 @@ export const products: Product[] = [
     description: 'Single shot of premium espresso with rich, bold flavor',
     price: 3.50,
     category: 'Hot Drinks',
-    image: '/assets/products/espresso.jpg',
+    image: 'https://images.unsplash.com/photo-1511920170033-f8396924c348?w=400',
     inStock: true,
     stockQuantity: 60,
     branchId: 'colombo',
@@ -268,7 +268,7 @@ export const products: Product[] = [
     description: 'Espresso with steamed milk and velvety foam',
     price: 4.50,
     category: 'Hot Drinks',
-    image: '/assets/products/cappuccino.jpg',
+    image: 'https://images.unsplash.com/photo-1527515637462-cff94eecc1ac?w=400',
     inStock: true,
     stockQuantity: 55,
     branchId: 'colombo',
@@ -281,7 +281,7 @@ export const products: Product[] = [
     description: 'Smooth espresso with steamed milk and a light layer of foam',
     price: 4.75,
     category: 'Hot Drinks',
-    image: '/assets/products/iced-latte.jpg',
+    image: 'https://images.unsplash.com/photo-1464983953574-0892a716854b?w=400',
     inStock: true,
     stockQuantity: 50,
     branchId: 'colombo',
@@ -294,7 +294,7 @@ export const products: Product[] = [
     description: 'Espresso, chocolate, and steamed milk.',
     price: 4.0,
     category: 'Hot Drinks',
-    image: '/assets/products/Mocha.jpg',
+    image: 'https://images.unsplash.com/photo-1464306076886-debca5e8a6b0?w=400',
     inStock: true,
     stockQuantity: 18,
     branchId: 'colombo',
@@ -307,7 +307,7 @@ export const products: Product[] = [
     description: 'Chilled coffee served over ice with optional cream',
     price: 4.00,
     category: 'Cold Beverages',
-    image: '/assets/products/iced-coffee.jpg',
+    image: 'https://images.unsplash.com/photo-1465101046530-73398c7f28ca?w=400',
     inStock: true,
     stockQuantity: 45,
     branchId: 'colombo',
@@ -320,7 +320,7 @@ export const products: Product[] = [
     description: 'Freshly baked muffin with blueberries.',
     price: 2.8,
     category: 'Bakery',
-    image: '/assets/products/blueberry-muffins-10.jpg',
+    image: 'https://images.unsplash.com/photo-1519864600265-abb23847ef2c?w=400',
     inStock: true,
     stockQuantity: 12,
     branchId: 'colombo',
@@ -333,7 +333,7 @@ export const products: Product[] = [
     description: 'Flaky croissant with chocolate filling.',
     price: 3.2,
     category: 'Bakery',
-    image: '/assets/products/chocolate-croissant.jpg',
+    image: 'https://images.unsplash.com/photo-1519864600265-abb23847ef2c?w=400',
     inStock: true,
     stockQuantity: 10,
     branchId: 'colombo',
@@ -346,7 +346,7 @@ export const products: Product[] = [
     description: 'Refreshing and healthy green tea.',
     price: 2.2,
     category: 'Tea',
-    image: '/assets/products/green tea.jpg',
+    image: 'https://images.unsplash.com/photo-1504674900247-0877df9cc836?w=400',
     inStock: true,
     stockQuantity: 15,
     branchId: 'colombo',
@@ -359,7 +359,7 @@ export const products: Product[] = [
     description: 'Moist carrot cake with cream cheese frosting.',
     price: 3.5,
     category: 'Bakery',
-    image: '/assets/products/carrot cake.jpg',
+    image: 'https://images.unsplash.com/photo-1505250469679-203ad9ced0cb?w=400',
     inStock: true,
     stockQuantity: 8,
     branchId: 'colombo',
@@ -372,7 +372,7 @@ export const products: Product[] = [
     description: 'Freshly baked bagel, perfect for breakfast.',
     price: 2.0,
     category: 'Bakery',
-    image: '/assets/products/bagel.jpg',
+    image: 'https://images.unsplash.com/photo-1506784983877-45594efa4cbe?w=400',
     inStock: true,
     stockQuantity: 14,
     branchId: 'colombo',
@@ -385,7 +385,7 @@ export const products: Product[] = [
     description: 'Fruit smoothie, healthy and refreshing.',
     price: 3.7,
     category: 'Cold Drinks',
-    image: '/assets/products/Smoothie.jpg',
+    image: 'https://images.unsplash.com/photo-1502741338009-cac2772e18bc?w=400',
     inStock: true,
     stockQuantity: 16,
     branchId: 'colombo',
@@ -398,7 +398,7 @@ export const products: Product[] = [
     description: 'Rich and creamy hot chocolate.',
     price: 2.9,
     category: 'Hot Drinks',
-    image: '/assets/products/Hot Chocolate.jpg',
+    image: 'https://images.unsplash.com/photo-1515442261605-cd4ce40f1d89?w=400',
     inStock: true,
     stockQuantity: 11,
     branchId: 'colombo',
@@ -411,7 +411,7 @@ export const products: Product[] = [
     description: 'Classic glazed donut, sweet and soft.',
     price: 1.8,
     category: 'Bakery',
-    image: '/assets/products/donut.jpg',
+    image: 'https://images.unsplash.com/photo-1502741338009-cac2772e18bc?w=400',
     inStock: true,
     stockQuantity: 20,
     branchId: 'colombo',
@@ -640,7 +640,12 @@ export const inventoryAlerts: InventoryAlert[] = [
 // Helper functions
 export const getBranchStats = (branchId: string): BranchStats | null => {
   if (!branchId) return null
-  // Replace with actual data fetching logic
+  
+  // Return specific branch stats
+  const branchStat = branchStats.find(stat => stat.branchId === branchId)
+  if (branchStat) return branchStat
+  
+  // Fallback for unknown branches
   return {
     branchId: branchId,
     branchName: branches.find(b => b.id === branchId)?.name || 'Unknown',
@@ -652,6 +657,120 @@ export const getBranchStats = (branchId: string): BranchStats | null => {
     todayOrders: 15,
     monthlyGrowth: 7.5,
     lowStockItems: getBranchInventoryAlerts(branchId).length
+  }
+}
+
+// New function to get combined stats for all branches
+export const getAllBranchStats = (): BranchStats => {
+  const jaffnaStats = getBranchStats('jaffna')
+  const colomboStats = getBranchStats('colombo')
+  
+  if (!jaffnaStats || !colomboStats) {
+    return {
+      branchId: 'all',
+      branchName: 'All Branches',
+      totalSales: 0,
+      totalOrders: 0,
+      totalCustomers: 0,
+      totalProducts: 0,
+      todaySales: 0,
+      todayOrders: 0,
+      monthlyGrowth: 0,
+      lowStockItems: 0,
+    }
+  }
+  
+  return {
+    branchId: 'all',
+    branchName: 'All Branches',
+    totalSales: jaffnaStats.totalSales + colomboStats.totalSales,
+    totalOrders: jaffnaStats.totalOrders + colomboStats.totalOrders,
+    totalCustomers: jaffnaStats.totalCustomers + colomboStats.totalCustomers,
+    totalProducts: jaffnaStats.totalProducts + colomboStats.totalProducts,
+    todaySales: jaffnaStats.todaySales + colomboStats.todaySales,
+    todayOrders: jaffnaStats.todayOrders + colomboStats.todayOrders,
+    monthlyGrowth: ((jaffnaStats.monthlyGrowth + colomboStats.monthlyGrowth) / 2),
+    lowStockItems: jaffnaStats.lowStockItems + colomboStats.lowStockItems,
+  }
+}
+
+// New function to get combined analytics data for all branches
+export const getAllBranchAnalyticsData = () => {
+  const jaffnaData = getBranchAnalyticsData('jaffna')
+  const colomboData = getBranchAnalyticsData('colombo')
+  
+  if (!jaffnaData || !colomboData) {
+    return {
+      totalRevenue: 0,
+      totalOrders: 0,
+      activeCustomers: 0,
+      conversionRate: 0,
+      revenueGrowth: 0,
+      orderGrowth: 0,
+      customerGrowth: 0,
+      conversionGrowth: 0,
+    }
+  }
+  
+  return {
+    totalRevenue: jaffnaData.totalRevenue + colomboData.totalRevenue,
+    totalOrders: jaffnaData.totalOrders + colomboData.totalOrders,
+    activeCustomers: jaffnaData.activeCustomers + colomboData.activeCustomers,
+    conversionRate: (jaffnaData.conversionRate + colomboData.conversionRate) / 2,
+    revenueGrowth: (jaffnaData.revenueGrowth + colomboData.revenueGrowth) / 2,
+    orderGrowth: (jaffnaData.orderGrowth + colomboData.orderGrowth) / 2,
+    customerGrowth: (jaffnaData.customerGrowth + colomboData.customerGrowth) / 2,
+    conversionGrowth: (jaffnaData.conversionGrowth + colomboData.conversionGrowth) / 2,
+  }
+}
+
+// Updated function to get data based on branch view
+export const getDataByBranchView = (branchView: 'all' | 'jaffna' | 'colombo') => {
+  switch (branchView) {
+    case 'all':
+      return {
+        stats: getAllBranchStats(), // For Dashboard
+        analytics: getAllBranchAnalyticsData(), // For Analytics Page
+        products: products, // All products
+        orders: orders, // All orders
+        customers: customers, // All customers
+        salesData: salesData, // All sales data
+        inventoryAlerts: inventoryAlerts, // All alerts
+        customerMetrics: getBranchCustomerMetrics(),
+      }
+    case 'jaffna':
+      return {
+        stats: getBranchStats('jaffna'),
+        analytics: getBranchAnalyticsData('jaffna'),
+        products: getBranchProducts('jaffna'),
+        orders: getBranchOrders('jaffna'),
+        customers: getBranchCustomers('jaffna'),
+        salesData: getBranchSalesData('jaffna'),
+        inventoryAlerts: getBranchInventoryAlerts('jaffna'),
+        customerMetrics: getBranchCustomerMetrics(),
+      }
+    case 'colombo':
+      return {
+        stats: getBranchStats('colombo'),
+        analytics: getBranchAnalyticsData('colombo'),
+        products: getBranchProducts('colombo'),
+        orders: getBranchOrders('colombo'),
+        customers: getBranchCustomers('colombo'),
+        salesData: getBranchSalesData('colombo'),
+        inventoryAlerts: getBranchInventoryAlerts('colombo'),
+        customerMetrics: getBranchCustomerMetrics(),
+      }
+    default:
+      return {
+        stats: getAllBranchStats(),
+        analytics: getAllBranchAnalyticsData(),
+        products: products,
+        orders: orders,
+        customers: customers,
+        salesData: salesData,
+        inventoryAlerts: inventoryAlerts,
+        customerMetrics: getBranchCustomerMetrics(),
+      }
   }
 }
 

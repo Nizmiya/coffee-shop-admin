@@ -23,6 +23,7 @@ import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigge
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar'
 import { useAuthStore } from '@/lib/store/auth-store'
 import { useRouter } from 'next/navigation'
+import BranchSelector from './branch-selector'
 
 const navigation = [
   { name: 'Dashboard', href: '/dashboard', icon: LayoutDashboard },
@@ -103,9 +104,9 @@ export default function DashboardLayout({ children }: DashboardLayoutProps) {
       {/* Main content */}
       <div className={`lg:pl-64 transition-all duration-300 ease-in-out`}>
         {/* Top bar */}
-        <div className="sticky top-0 z-40 bg-background/80 backdrop-blur-md border-b border-border">
+        <div className="sticky top-0 z-[9999] bg-background/80 backdrop-blur-md border-b border-border overflow-visible">
           <div className="flex items-center justify-between h-14 px-3 sm:px-4">
-            <div className="flex items-center">
+            <div className="flex items-center gap-4">
               <Button
                 variant="ghost"
                 size="sm"

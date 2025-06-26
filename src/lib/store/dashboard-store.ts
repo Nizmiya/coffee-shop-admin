@@ -18,11 +18,13 @@ interface DashboardStore {
   
   // Branch management
   selectedBranch: Branch | null
+  selectedBranchView: 'all' | 'jaffna' | 'colombo'
   branches: Branch[]
   currentUser: User | null
   
   // Branch stats
   branchStats: BranchStats | null
+  allBranchStats: BranchStats | null
   
   // Actions
   toggleTheme: () => void
@@ -30,15 +32,18 @@ interface DashboardStore {
   addNotification: (notification: Omit<Notification, 'id'>) => void
   removeNotification: (id: string) => void
   setSelectedBranch: (branch: Branch) => void
+  setSelectedBranchView: (view: 'all' | 'jaffna' | 'colombo') => void
   setBranches: (branches: Branch[]) => void
   setCurrentUser: (user: User) => void
   setBranchStats: (stats: BranchStats) => void
+  setAllBranchStats: (stats: BranchStats) => void
   addBranch: (branch: Branch) => void
   
   // Computed values
   isAdmin: boolean
   isManager: boolean
   canAccessBranch: (branchId: string) => boolean
+  getCurrentBranchData: () => BranchStats | null
 }
 
 export const useDashboardStore = create<DashboardStore>()(
@@ -50,11 +55,13 @@ export const useDashboardStore = create<DashboardStore>()(
       
       // Branch management
       selectedBranch: null,
+      selectedBranchView: 'all',
       branches: [],
       currentUser: null,
       
       // Branch stats
       branchStats: null,
+      allBranchStats: null,
       
       toggleTheme: () => {
         const currentTheme = get().theme
@@ -90,9 +97,11 @@ export const useDashboardStore = create<DashboardStore>()(
       
       // Actions
       setSelectedBranch: (branch) => set({ selectedBranch: branch }),
+      setSelectedBranchView: (view) => set({ selectedBranchView: view }),
       setBranches: (branches) => set({ branches }),
       setCurrentUser: (user) => set({ currentUser: user }),
       setBranchStats: (stats) => set({ branchStats: stats }),
+      setAllBranchStats: (stats) => set({ allBranchStats: stats }),
       addBranch: (branch) => set((state) => ({ branches: [...state.branches, branch] })),
       
       // Computed values
@@ -108,11 +117,23 @@ export const useDashboardStore = create<DashboardStore>()(
         const { currentUser, isAdmin } = get()
         if (isAdmin) return true
         return currentUser?.branchId === branchId
+      },
+
+      getCurrentBranchData: () => {
+        const { selectedBranchView, branchStats, allBranchStats } = get()
+        if (selectedBranchView === 'all') {
+          return allBranchStats
+        }
+        return branchStats
       }
     }),
     {
       name: 'dashboard-storage',
-      partialize: (state) => ({ theme: state.theme, sidebarOpen: state.sidebarOpen })
+      partialize: (state) => ({ 
+        theme: state.theme, 
+        sidebarOpen: state.sidebarOpen,
+        selectedBranchView: state.selectedBranchView
+      })
     }
   )
 ) 

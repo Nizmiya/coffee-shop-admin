@@ -9,11 +9,12 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table'
 import { Search, Filter, Eye, Edit, Trash2, ShoppingCart, Sparkles, Clock, CheckCircle, XCircle } from 'lucide-react'
 import { useDashboardStore } from '@/lib/store/dashboard-store'
-import { getBranchOrders } from '@/lib/mock-data'
+import { getDataByBranchView } from '@/lib/mock-data'
 
 export default function OrdersPage() {
-  const { selectedBranch } = useDashboardStore()
-  const orders = selectedBranch ? getBranchOrders(selectedBranch.id) : []
+  const { selectedBranchView } = useDashboardStore()
+  const data = getDataByBranchView(selectedBranchView)
+  const orders = data.orders
   const [searchTerm, setSearchTerm] = useState('')
   const [statusFilter, setStatusFilter] = useState('all')
 

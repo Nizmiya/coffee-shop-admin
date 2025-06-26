@@ -23,35 +23,27 @@ import {
 import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, BarChart, Bar, AreaChart, Area, PieChart, Pie, Cell } from 'recharts'
 import { 
   branches, 
-  getBranchStats, 
-  getBranchSalesData, 
-  getBranchProducts, 
-  getBranchOrders, 
-  getBranchInventoryAlerts 
+  getDataByBranchView, 
 } from '@/lib/mock-data'
 import { useDashboardStore } from '@/lib/store/dashboard-store'
-import { BranchSelector } from '@/components/ui/branch-selector'
+import BranchSelector from '@/components/dashboard/branch-selector'
 import { Product, Order } from '@/lib/types'
 
 export default function DashboardPage() {
   const router = useRouter()
   const [currentDateTime, setCurrentDateTime] = useState(new Date())
-  const { selectedBranch, setSelectedBranch, setBranches, setCurrentUser } = useDashboardStore()
+  const { selectedBranchView, setSelectedBranchView, setBranches, setCurrentUser } = useDashboardStore()
 
   useEffect(() => {
     const timer = setInterval(() => {
       setCurrentDateTime(new Date())
     }, 1000)
-
     return () => clearInterval(timer)
   }, [])
 
   useEffect(() => {
     setBranches(branches)
-    if (!selectedBranch && branches.length > 0) {
-      setSelectedBranch(branches[0])
-    }
-    // Minimal user object for UI
+    setSelectedBranchView('all') // Default to all branches for admin
     setCurrentUser({
       id: 'admin1',
       name: 'Admin User',
@@ -61,8 +53,45 @@ export default function DashboardPage() {
       createdAt: new Date(),
       updatedAt: new Date(),
     })
-    // eslint-disable-next-line
   }, [])
+
+  // Get all data based on selectedBranchView
+  const data = getDataByBranchView(selectedBranchView)
+  const branchStats = data.stats
+  const salesData = data.salesData
+  const allProducts = data.products
+  const allOrders = data.orders
+  const allCustomers = data.customers
+  const inventoryAlerts = data.inventoryAlerts
+  const COLORS = ['#8b5cf6', '#ec4899', '#06b6d4', '#10b981', '#f59e0b', '#ef4444']
+
+  // Top 5 products by revenue
+  const productPerformance = allProducts
+    .map(product => ({
+      productId: product.id,
+      productName: product.name,
+      sales: Math.floor(Math.random() * 50) + 10,
+      revenue: Math.floor(Math.random() * 200) + 50,
+      orders: Math.floor(Math.random() * 30) + 5,
+      branchId: product.branchId
+    }))
+    .sort((a, b) => b.revenue - a.revenue)
+    .slice(0, 5)
+
+  // Recent 5 orders (latest first)
+  const recentOrders = allOrders
+    .sort((a, b) => new Date(b.orderDate).getTime() - new Date(a.orderDate).getTime())
+    .slice(0, 5)
+
+  // Branch label for heading
+  const branchLabel = selectedBranchView === 'all'
+    ? 'All Branches'
+    : selectedBranchView === 'jaffna'
+      ? 'Jaffna Branch'
+      : 'Colombo Branch'
+  const branchLocation = selectedBranchView === 'all' ? 'Jaffna & Colombo' : (selectedBranchView === 'jaffna' ? 'Jaffna' : 'Colombo')
+  const branchPhone = selectedBranchView === 'all' ? `${branches[0].phone} / ${branches[1].phone}` : (selectedBranchView === 'jaffna' ? branches[0].phone : branches[1].phone)
+  const branchEmail = selectedBranchView === 'all' ? `${branches[0].email} / ${branches[1].email}` : (selectedBranchView === 'jaffna' ? branches[0].email : branches[1].email)
 
   const handleQuickAction = (path: string) => {
     router.push(path)
@@ -86,35 +115,6 @@ export default function DashboardPage() {
     })
   }
 
-  // Memoize data fetching to prevent re-renders
-  const branchStats = selectedBranch ? getBranchStats(selectedBranch.id) : null
-  const salesData = selectedBranch ? getBranchSalesData(selectedBranch.id) : []
-  const productPerformance = selectedBranch 
-    ? getBranchProducts(selectedBranch.id).slice(0, 5).map(product => ({
-        productId: product.id,
-        productName: product.name,
-        sales: Math.floor(Math.random() * 50) + 10,
-        revenue: Math.floor(Math.random() * 200) + 50,
-        orders: Math.floor(Math.random() * 30) + 5,
-        branchId: selectedBranch.id
-      }))
-    : []
-  const recentOrders = selectedBranch ? getBranchOrders(selectedBranch.id).slice(0, 5) : []
-  const inventoryAlerts = selectedBranch ? getBranchInventoryAlerts(selectedBranch.id) : []
-  const COLORS = ['#8b5cf6', '#ec4899', '#06b6d4', '#10b981', '#f59e0b', '#ef4444']
-
-  if (!selectedBranch) {
-    return (
-      <div className="flex items-center justify-center h-full">
-        <div className="text-center p-8 bg-gray-50 rounded-lg shadow-md">
-          <Building2 className="h-16 w-16 text-gray-400 mx-auto mb-4" />
-          <h3 className="text-xl font-semibold text-gray-700 mb-2">No Branch Selected</h3>
-          <p className="text-gray-500">Please select a branch from the dropdown to view its dashboard.</p>
-        </div>
-      </div>
-    )
-  }
-
   const quickActions = [
     { name: 'New Order', path: '/orders?action=new', icon: ShoppingCart },
     { name: 'Add Product', path: '/products?action=new', icon: Package },
@@ -123,21 +123,21 @@ export default function DashboardPage() {
   ]
 
   return (
-    <div className="space-y-6 p-1">
+    <div className="space-y-6 p-1 overflow-visible">
       <div className="relative">
         <div className="absolute -inset-1 bg-gradient-to-r from-purple-600 to-pink-600 rounded-lg blur opacity-25"></div>
         <div className="relative bg-white/70 backdrop-blur-sm p-4 rounded-lg border border-purple-200/20">
           <div className="flex flex-col sm:flex-row items-center justify-between">
             <div className="mb-4 sm:mb-0">
               <h1 className="text-3xl font-bold tracking-tight bg-gradient-to-r from-purple-600 to-pink-600 bg-clip-text text-transparent">
-                {selectedBranch.name} Dashboard
+                {branchLabel} Dashboard
               </h1>
               <p className="text-sm text-gray-500 mt-1">
                 Real-time overview of your branch performance.
               </p>
             </div>
             <div className="w-full sm:w-64">
-              <BranchSelector branches={branches} />
+              <BranchSelector />
             </div>
           </div>
         </div>
@@ -164,16 +164,16 @@ export default function DashboardPage() {
           </CardContent>
         </Card>
 
-        <Card className="bg-white/60 backdrop-blur-sm border-gray-200/50">
+        <Card className="bg-white/60 backdrop-blur-sm border-gray-200/50 mt-16">
           <CardContent className="p-4">
             <div className="flex items-center justify-between">
                 <div className="flex items-center space-x-3">
                     <Building2 className="h-5 w-5 text-purple-600" />
-                    <h3 className="text-sm font-semibold text-gray-800">{selectedBranch.location}</h3>
+                    <h3 className="text-sm font-semibold text-gray-800">{branchLocation}</h3>
                 </div>
                 <div className="text-right">
-                    <p className="text-xs text-gray-500">{selectedBranch.phone}</p>
-                    <p className="text-xs text-gray-500">{selectedBranch.email}</p>
+                    <p className="text-xs text-gray-500">{branchPhone}</p>
+                    <p className="text-xs text-gray-500">{branchEmail}</p>
                 </div>
             </div>
           </CardContent>
@@ -192,7 +192,7 @@ export default function DashboardPage() {
           <CardContent className="px-3 pb-3">
             <div className="space-y-2">
               {inventoryAlerts.map((alert) => (
-                <div key={alert.productId} className="flex items-center justify-between p-2 bg-white/60 rounded-md text-xs">
+                <div key={alert.productId + alert.branchId} className="flex items-center justify-between p-2 bg-white/60 rounded-md text-xs">
                   <span className="font-medium text-gray-700">{alert.productName}</span>
                   <Badge variant="destructive" className="text-xs">
                     Stock: {alert.currentStock} (Min: {alert.lowStockThreshold})
@@ -273,7 +273,7 @@ export default function DashboardPage() {
           <CardHeader>
             <CardTitle className="flex items-center">
               <BarChart3 className="mr-2 h-5 w-5 text-purple-500" />
-              Revenue Trends - {selectedBranch.name}
+              Revenue Trends - {branchLabel}
             </CardTitle>
             <CardDescription>Monthly revenue performance over time</CardDescription>
           </CardHeader>
@@ -300,7 +300,7 @@ export default function DashboardPage() {
           <CardHeader>
             <CardTitle className="flex items-center">
               <Package className="mr-2 h-5 w-5 text-orange-500" />
-              Top Products - {selectedBranch.name}
+              Top Products - {branchLabel}
             </CardTitle>
             <CardDescription>Best performing products by revenue</CardDescription>
           </CardHeader>

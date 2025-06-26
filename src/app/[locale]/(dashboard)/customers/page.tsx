@@ -9,11 +9,12 @@ import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar'
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table'
 import { Search, Users, Mail, Phone, MapPin, Star, Sparkles, TrendingUp, ShoppingBag, Calendar, Trash2 } from 'lucide-react'
 import { useDashboardStore } from '@/lib/store/dashboard-store'
-import { getBranchCustomers } from '@/lib/mock-data'
+import { getDataByBranchView } from '@/lib/mock-data'
 
 export default function CustomersPage() {
-  const { selectedBranch } = useDashboardStore()
-  const customers = selectedBranch ? getBranchCustomers(selectedBranch.id) : []
+  const { selectedBranchView } = useDashboardStore()
+  const data = getDataByBranchView(selectedBranchView)
+  const customers = data.customers
   const [searchTerm, setSearchTerm] = useState('')
 
   const filteredCustomers = customers.filter(customer =>

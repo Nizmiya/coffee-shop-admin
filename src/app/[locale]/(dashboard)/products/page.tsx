@@ -8,31 +8,84 @@ import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select'
 import { Search, Edit, Trash2, Package, Sparkles, Plus } from 'lucide-react'
-import { categories, getBranchProducts } from '@/lib/mock-data'
+import { categories, getBranchProducts, getDataByBranchView, products as allProducts } from '@/lib/mock-data'
 import ProductForm from '@/components/forms/product-form'
 import { Product } from '@/lib/types'
 import { useDashboardStore } from '@/lib/store/dashboard-store'
+import { useProductsStore } from '@/lib/store/products-store'
 
 export default function ProductsPage() {
-  const { selectedBranch } = useDashboardStore()
-  const [productsByBranch, setProductsByBranch] = useState<{ [branchId: string]: Product[] }>({})
+  const { selectedBranchView } = useDashboardStore()
   const [searchTerm, setSearchTerm] = useState('')
   const [categoryFilter, setCategoryFilter] = useState('all')
   const [editProduct, setEditProduct] = useState<Product | null>(null)
   const [formOpen, setFormOpen] = useState(false)
   const [categories, setCategories] = useState<string[]>([])
+  const [branchId, setBranchId] = useState('jaffna')
+  const showBranchSelect = selectedBranchView === 'all'
+  const branches = [
+    { id: 'jaffna', name: 'Jaffna Branch' },
+    { id: 'colombo', name: 'Colombo Branch' }
+  ]
+
+  // Zustand products store
+  const {
+    productsByBranch,
+    addProduct,
+    updateProduct,
+    deleteProduct,
+    setProducts,
+    getProducts,
+    getAllProducts
+  } = useProductsStore()
+
+  // On first load, initialize from mock data if store is empty
+  useEffect(() => {
+    if (Object.keys(productsByBranch).length === 0) {
+      branches.forEach(branch => {
+        const branchProducts = getBranchProducts(branch.id)
+        setProducts(branch.id, branchProducts)
+      })
+    }
+    // eslint-disable-next-line
+  }, [])
+
+  // Ensure products for selected branch are always present
+  useEffect(() => {
+    if (selectedBranchView === 'all') {
+      const all = getAllProducts()
+      if (all.length === 0) {
+        branches.forEach(branch => {
+          const branchProducts = getBranchProducts(branch.id)
+          setProducts(branch.id, branchProducts)
+        })
+      }
+    } else if (selectedBranchView && selectedBranchView !== 'all') {
+      const branchProducts = getProducts(selectedBranchView.id)
+      if (!branchProducts || branchProducts.length === 0) {
+        setProducts(selectedBranchView.id, getBranchProducts(selectedBranchView.id))
+      }
+    }
+    // eslint-disable-next-line
+  }, [selectedBranchView])
+
+  // Get products to display based on store and selectedBranchView
+  let products: Product[] = [];
+  if (selectedBranchView === 'all') {
+    products = getAllProducts()
+  } else if (selectedBranchView && selectedBranchView !== 'all') {
+    products = getProducts(selectedBranchView.id)
+  }
 
   useEffect(() => {
-    if (selectedBranch) {
-      const branchProducts = getBranchProducts(selectedBranch.id)
-      setProductsByBranch(prev => ({ ...prev, [selectedBranch.id]: branchProducts }))
-      
-      const uniqueCategories = [...new Set(branchProducts.map(p => p.category))]
+    if (selectedBranchView && selectedBranchView !== 'all') {
+      const uniqueCategories = [...new Set(getProducts(selectedBranchView.id).map(p => p.category))]
+      setCategories(uniqueCategories)
+    } else if (selectedBranchView === 'all') {
+      const uniqueCategories = [...new Set(getAllProducts().map(p => p.category))]
       setCategories(uniqueCategories)
     }
-  }, [selectedBranch])
-
-  const products = selectedBranch ? (productsByBranch[selectedBranch.id] || []) : []
+  }, [selectedBranchView, productsByBranch])
 
   const filteredProducts = products.filter(product => {
     const matchesSearch = product.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
@@ -42,18 +95,16 @@ export default function ProductsPage() {
   })
 
   const handleAddProduct = (productData: Omit<Product, 'id' | 'createdAt' | 'updatedAt'>) => {
-    if (!selectedBranch) return
+    const branch = showBranchSelect ? branchId : selectedBranchView
+    if (!branch) return
     const newProduct: Product = {
       ...productData,
       id: Math.random().toString(36).substr(2, 9),
       createdAt: new Date(),
       updatedAt: new Date(),
-      branchId: selectedBranch.id
+      branchId: branch
     }
-    setProductsByBranch(prev => ({
-      ...prev,
-      [selectedBranch.id]: [newProduct, ...(prev[selectedBranch.id] || [])]
-    }))
+    addProduct(branch, newProduct)
     setFormOpen(false)
   }
 
@@ -63,23 +114,20 @@ export default function ProductsPage() {
   }
 
   const handleUpdateProduct = (updatedData: Omit<Product, 'id' | 'createdAt' | 'updatedAt'>) => {
-    if (!selectedBranch || !editProduct) return
-    setProductsByBranch(prev => ({
-      ...prev,
-      [selectedBranch.id]: prev[selectedBranch.id].map(p =>
-        p.id === editProduct.id ? { ...p, ...updatedData, updatedAt: new Date() } : p
-      )
-    }))
+    if (!selectedBranchView || !editProduct) return
+    const updatedProduct: Product = {
+      ...editProduct,
+      ...updatedData,
+      updatedAt: new Date()
+    }
+    updateProduct(selectedBranchView, updatedProduct)
     setEditProduct(null)
     setFormOpen(false)
   }
 
   const handleDeleteProduct = (product: Product) => {
-    if (!selectedBranch) return
-    setProductsByBranch(prev => ({
-      ...prev,
-      [selectedBranch.id]: prev[selectedBranch.id].filter(p => p.id !== product.id)
-    }))
+    if (!selectedBranchView) return
+    deleteProduct(selectedBranchView, product.id)
   }
 
   return (
@@ -106,7 +154,10 @@ export default function ProductsPage() {
             open={formOpen} 
             setOpen={setFormOpen} 
             initialData={editProduct || undefined}
-            branchId={selectedBranch?.id}
+            branchId={showBranchSelect ? branchId : selectedBranchView}
+            showBranchSelect={showBranchSelect}
+            branches={branches}
+            onBranchChange={setBranchId}
             categories={categories}
           />
         </div>
@@ -157,12 +208,22 @@ export default function ProductsPage() {
           <Card key={product.id} className="product-card group">
             <div className="aspect-square bg-muted relative overflow-hidden">
               {product.image ? (
-                <Image
-                  src={product.image}
-                  alt={product.name}
-                  fill
-                  className="object-cover group-hover:scale-110 transition-transform duration-500"
-                />
+                product.image.startsWith('/assets/') ? (
+                  <Image
+                    src={product.image}
+                    alt={product.name}
+                    fill
+                    className="object-cover group-hover:scale-110 transition-transform duration-500"
+                    priority
+                  />
+                ) : (
+                  <img
+                    src={product.image}
+                    alt={product.name}
+                    className="absolute inset-0 w-full h-full object-cover"
+                    style={{ objectFit: 'cover' }}
+                  />
+                )
               ) : (
                 <div className="absolute inset-0 flex items-center justify-center">
                   <Package className="h-12 w-12 text-muted-foreground" />
@@ -288,7 +349,7 @@ export default function ProductsPage() {
           </CardHeader>
           <CardContent>
             <div className="text-2xl font-bold bg-gradient-to-r from-blue-600 to-cyan-600 bg-clip-text text-transparent">
-              ${(products.reduce((sum, p) => sum + p.price, 0) / products.length).toFixed(2)}
+              {products.length > 0 ? `$${(products.reduce((sum, p) => sum + p.price, 0) / products.length).toFixed(2)}` : '$0.00'}
             </div>
             <p className="text-xs text-muted-foreground">
               Per product
