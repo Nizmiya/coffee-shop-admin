@@ -61,9 +61,9 @@ export default function ProductsPage() {
         })
       }
     } else if (selectedBranchView && selectedBranchView !== 'all') {
-      const branchProducts = getProducts(selectedBranchView.id)
+      const branchProducts = getProducts(selectedBranchView)
       if (!branchProducts || branchProducts.length === 0) {
-        setProducts(selectedBranchView.id, getBranchProducts(selectedBranchView.id))
+        setProducts(selectedBranchView, getBranchProducts(selectedBranchView))
       }
     }
     // eslint-disable-next-line
@@ -74,12 +74,12 @@ export default function ProductsPage() {
   if (selectedBranchView === 'all') {
     products = getAllProducts()
   } else if (selectedBranchView && selectedBranchView !== 'all') {
-    products = getProducts(selectedBranchView.id)
+    products = getProducts(selectedBranchView)
   }
 
   useEffect(() => {
     if (selectedBranchView && selectedBranchView !== 'all') {
-      const uniqueCategories = [...new Set(getProducts(selectedBranchView.id).map(p => p.category))].filter(Boolean)
+      const uniqueCategories = [...new Set(getProducts(selectedBranchView).map(p => p.category))].filter(Boolean)
       setCategories(uniqueCategories)
     } else if (selectedBranchView === 'all') {
       const uniqueCategories = [...new Set(getAllProducts().map(p => p.category))].filter(Boolean)
