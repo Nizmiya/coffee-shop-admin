@@ -14,16 +14,21 @@ import {
   X,
   Sun,
   Moon,
-  Coffee
+  Coffee,
+  Bell,
+  AlertTriangle,
 } from 'lucide-react'
 import { Button } from '@/components/ui/button'
 import { useDashboardStore } from '@/lib/store/dashboard-store'
 import { Toaster } from '@/components/ui/sonner'
+import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover'
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from '@/components/ui/dropdown-menu'
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar'
 import { useAuthStore } from '@/lib/store/auth-store'
 import { useRouter } from 'next/navigation'
 import BranchSelector from './branch-selector'
+import { getDataByBranchView } from '@/lib/mock-data'
+import { Badge } from '@/components/ui/badge'
 
 const navigation = [
   { name: 'Dashboard', href: '/dashboard', icon: LayoutDashboard },
@@ -118,6 +123,7 @@ export default function DashboardLayout({ children }: DashboardLayoutProps) {
             </div>
             
             <div className="flex items-center space-x-3">
+              <NotificationBell />
               <Button
                 variant="ghost"
                 size="sm"
@@ -174,5 +180,57 @@ export default function DashboardLayout({ children }: DashboardLayoutProps) {
 
       <Toaster />
     </div>
+  )
+}
+
+function NotificationBell() {
+  const { selectedBranchView } = useDashboardStore()
+  const data = getDataByBranchView(selectedBranchView)
+  const inventoryAlerts = data.inventoryAlerts || []
+
+  if (!inventoryAlerts) return null
+
+  return (
+    <Popover>
+      <PopoverTrigger asChild>
+        <Button
+          variant="ghost"
+          size="sm"
+          className="relative h-8 w-8 p-0 hover:bg-accent/50 rounded-full transition-all duration-300 hover:scale-110"
+        >
+          <Bell className="h-4 w-4" />
+          {inventoryAlerts.length > 0 && (
+            <span className="absolute top-0 right-0 flex h-2.5 w-2.5">
+              <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-red-400 opacity-75"></span>
+              <span className="relative inline-flex rounded-full h-2 w-2 bg-red-500"></span>
+            </span>
+          )}
+        </Button>
+      </PopoverTrigger>
+      <PopoverContent align="end" className="w-80 p-0">
+        <div className="p-3 font-semibold text-sm border-b">
+          Low Stock Alerts ({inventoryAlerts.length})
+        </div>
+        <div className="p-2 space-y-2 max-h-80 overflow-y-auto">
+          {inventoryAlerts.length > 0 ? (
+            inventoryAlerts.map((alert) => (
+              <div key={alert.productId + alert.branchId} className="flex items-center justify-between p-2 bg-secondary/50 rounded-md text-xs">
+                <div>
+                  <div className="font-medium text-foreground">{alert.productName}</div>
+                  <div className="text-muted-foreground">Branch: {alert.branchId}</div>
+                </div>
+                <Badge variant="destructive" className="text-xs">
+                  Stock: {alert.currentStock} (Min: {alert.lowStockThreshold})
+                </Badge>
+              </div>
+            ))
+          ) : (
+            <div className="text-center text-sm text-muted-foreground p-4">
+              No new alerts. You're all caught up!
+            </div>
+          )}
+        </div>
+      </PopoverContent>
+    </Popover>
   )
 } 

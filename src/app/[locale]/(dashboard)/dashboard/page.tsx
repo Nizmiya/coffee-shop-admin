@@ -180,30 +180,6 @@ export default function DashboardPage() {
         </Card>
       </div>
 
-      {/* Inventory Alerts */}
-      {inventoryAlerts.length > 0 && (
-        <Card className="bg-red-50/50 border-red-200/80">
-          <CardHeader className="p-3">
-            <CardTitle className="flex items-center text-red-700 text-sm font-semibold">
-              <AlertTriangle className="mr-2 h-4 w-4" />
-              Low Stock Alerts
-            </CardTitle>
-          </CardHeader>
-          <CardContent className="px-3 pb-3">
-            <div className="space-y-2">
-              {inventoryAlerts.map((alert) => (
-                <div key={alert.productId + alert.branchId} className="flex items-center justify-between p-2 bg-white/60 rounded-md text-xs">
-                  <span className="font-medium text-gray-700">{alert.productName}</span>
-                  <Badge variant="destructive" className="text-xs">
-                    Stock: {alert.currentStock} (Min: {alert.lowStockThreshold})
-                  </Badge>
-                </div>
-              ))}
-            </div>
-          </CardContent>
-        </Card>
-      )}
-
       {/* Stats Cards */}
       <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-4">
         <Card className="stats-card group">
