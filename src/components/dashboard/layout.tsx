@@ -34,14 +34,14 @@ import { Badge } from '@/components/ui/badge'
 import { cn } from '@/lib/utils'
 
 const navigation = [
-  { name: 'Dashboard', href: '/dashboard', icon: LayoutDashboard },
-  { name: 'Orders', href: '/orders', icon: ShoppingCart },
-  { name: 'Products', href: '/products', icon: Package },
-  { name: 'Customers', href: '/customers', icon: Users },
-  { name: 'Staff', href: '/staff', icon: UserCog },
-  { name: 'Promotions', href: '/promotions', icon: Gift },
-  { name: 'Analytics', href: '/analytics', icon: BarChart3 },
-  { name: 'Settings', href: '/settings', icon: Settings },
+  { name: 'Dashboard', href: '/dashboard', icon: LayoutDashboard, showFor: ['all', 'jaffna', 'colombo', 'customer'] },
+  { name: 'Orders', href: '/orders', icon: ShoppingCart, showFor: ['all', 'jaffna', 'colombo', 'customer'] },
+  { name: 'Products', href: '/products', icon: Package, showFor: ['all', 'jaffna', 'colombo', 'customer'] },
+  { name: 'Customers', href: '/customers', icon: Users, showFor: ['all', 'jaffna', 'colombo'] },
+  { name: 'Staff', href: '/staff', icon: UserCog, showFor: ['all', 'jaffna', 'colombo'] },
+  { name: 'Promotions', href: '/promotions', icon: Gift, showFor: ['all', 'jaffna', 'colombo', 'customer'] },
+  { name: 'Analytics', href: '/analytics', icon: BarChart3, showFor: ['all', 'jaffna', 'colombo'] },
+  { name: 'Settings', href: '/settings', icon: Settings, showFor: ['all', 'jaffna', 'colombo', 'customer'] },
 ]
 
 interface DashboardLayoutProps {
@@ -50,7 +50,7 @@ interface DashboardLayoutProps {
 
 export default function DashboardLayout({ children }: DashboardLayoutProps) {
   const pathname = usePathname()
-  const { theme, sidebarOpen, toggleTheme, toggleSidebar } = useDashboardStore()
+  const { theme, sidebarOpen, toggleTheme, toggleSidebar, selectedBranchView } = useDashboardStore()
   const [mounted, setMounted] = useState(false)
   const { user, logout } = useAuthStore()
   const router = useRouter()
@@ -91,7 +91,7 @@ export default function DashboardLayout({ children }: DashboardLayoutProps) {
         <nav className="mt-6 px-3">
           <div className="space-y-1">
             <div className="flex flex-col space-y-2 mt-8">
-              {navigation.map((item) => (
+              {navigation.filter(item => item.showFor.includes(selectedBranchView)).map((item) => (
                 <Link
                   key={item.name}
                   href={item.href}

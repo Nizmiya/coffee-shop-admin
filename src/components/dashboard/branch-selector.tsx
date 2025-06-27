@@ -1,7 +1,7 @@
 'use client'
 
 import { useState } from 'react'
-import { ChevronDown, Building2 } from 'lucide-react'
+import { ChevronDown, Building2, Users } from 'lucide-react'
 import { Button } from '@/components/ui/button'
 import { useDashboardStore } from '@/lib/store/dashboard-store'
 import { getDataByBranchView } from '@/lib/mock-data'
@@ -10,6 +10,7 @@ const branchOptions = [
   { value: 'all', label: 'All Branches', icon: Building2 },
   { value: 'jaffna', label: 'Jaffna Branch', icon: Building2 },
   { value: 'colombo', label: 'Colombo Branch', icon: Building2 },
+  { value: 'customer', label: 'Customer', icon: Users },
 ]
 
 export default function BranchSelector({ className = '' }) {
@@ -26,6 +27,8 @@ export default function BranchSelector({ className = '' }) {
     const data = getDataByBranchView(branchView)
     if (branchView === 'all') {
       setAllBranchStats(data.stats)
+    } else if (branchView === 'customer') {
+      setBranchStats(null)
     } else {
       setBranchStats(data.stats)
     }

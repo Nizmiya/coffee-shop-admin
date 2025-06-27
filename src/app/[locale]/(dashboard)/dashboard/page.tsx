@@ -28,6 +28,7 @@ import {
 import { useDashboardStore } from '@/lib/store/dashboard-store'
 import BranchSelector from '@/components/dashboard/branch-selector'
 import { Product, Order } from '@/lib/types'
+import Link from 'next/link'
 
 export default function DashboardPage() {
   const router = useRouter()
@@ -121,6 +122,33 @@ export default function DashboardPage() {
     { name: 'Add Customer', path: '/customers?action=new', icon: Users },
     { name: 'View Analytics', path: '/analytics', icon: BarChart3 },
   ]
+
+  if (selectedBranchView === 'customer') {
+    return (
+      <div className="flex flex-col items-center justify-center min-h-[60vh] text-center">
+        <h1 className="text-4xl font-bold bg-gradient-to-r from-orange-700 to-yellow-400 bg-clip-text text-transparent mb-4">Welcome, Customer!</h1>
+        <p className="text-lg text-gray-700 mb-6">You can browse products, place orders, view your order status, enjoy promotions, and manage your settings.</p>
+        <div className="grid gap-4 md:grid-cols-2 max-w-2xl w-full">
+          <Link href="/products" className="bg-gradient-to-br from-yellow-100 via-orange-50 to-yellow-200 p-6 rounded-xl shadow text-left transition hover:scale-105 cursor-pointer block">
+            <h2 className="font-bold text-orange-800 text-xl mb-2 flex items-center gap-2">🛒 Products</h2>
+            <p>Browse and order your favorite coffee shop items.</p>
+          </Link>
+          <Link href="/orders" className="bg-gradient-to-br from-yellow-100 via-orange-50 to-yellow-200 p-6 rounded-xl shadow text-left transition hover:scale-105 cursor-pointer block">
+            <h2 className="font-bold text-orange-800 text-xl mb-2 flex items-center gap-2">📦 Orders</h2>
+            <p>Track your orders and see confirmation messages.</p>
+          </Link>
+          <Link href="/promotions" className="bg-gradient-to-br from-yellow-100 via-orange-50 to-yellow-200 p-6 rounded-xl shadow text-left transition hover:scale-105 cursor-pointer block">
+            <h2 className="font-bold text-orange-800 text-xl mb-2 flex items-center gap-2">🎁 Promotions</h2>
+            <p>View and use available offers and vouchers for discounts.</p>
+          </Link>
+          <Link href="/settings" className="bg-gradient-to-br from-yellow-100 via-orange-50 to-yellow-200 p-6 rounded-xl shadow text-left transition hover:scale-105 cursor-pointer block">
+            <h2 className="font-bold text-orange-800 text-xl mb-2 flex items-center gap-2">⚙️ Settings</h2>
+            <p>Manage your profile and preferences.</p>
+          </Link>
+        </div>
+      </div>
+    );
+  }
 
   return (
     <div className="space-y-6 p-1 overflow-visible">

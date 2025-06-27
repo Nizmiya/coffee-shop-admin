@@ -23,10 +23,10 @@ export default function ProductsPage() {
   const [categories, setCategories] = useState<string[]>([])
   const [branchId, setBranchId] = useState('jaffna')
   const showBranchSelect = selectedBranchView === 'all'
-  const branches = [
-    { id: 'jaffna', name: 'Jaffna Branch' },
-    { id: 'colombo', name: 'Colombo Branch' }
-  ]
+  const [showBuyModal, setShowBuyModal] = useState(false)
+  const [selectedProduct, setSelectedProduct] = useState<Product | null>(null)
+  const [quantity, setQuantity] = useState(1)
+  const [orderSuccess, setOrderSuccess] = useState(false)
 
   // Zustand products store
   const {
@@ -38,6 +38,11 @@ export default function ProductsPage() {
     getProducts,
     getAllProducts
   } = useProductsStore()
+
+  const branches = [
+    { id: 'jaffna', name: 'Jaffna Branch' },
+    { id: 'colombo', name: 'Colombo Branch' }
+  ]
 
   // On first load, initialize from mock data if store is empty
   useEffect(() => {
@@ -73,8 +78,10 @@ export default function ProductsPage() {
   let products: Product[] = [];
   if (selectedBranchView === 'all') {
     products = getAllProducts()
-  } else if (selectedBranchView && selectedBranchView !== 'all') {
+  } else if (selectedBranchView && selectedBranchView !== 'all' && selectedBranchView !== 'customer') {
     products = getProducts(selectedBranchView)
+  } else if (selectedBranchView === 'customer') {
+    products = getAllProducts()
   }
 
   useEffect(() => {
@@ -128,6 +135,128 @@ export default function ProductsPage() {
   const handleDeleteProduct = (product: Product) => {
     if (!product.branchId) return
     deleteProduct(product.branchId, product.id)
+  }
+
+  // Customer buy logic
+  const handleBuy = (product: Product) => {
+    setSelectedProduct(product)
+    setQuantity(1)
+    setShowBuyModal(true)
+    setOrderSuccess(false)
+  }
+  const handleConfirmOrder = () => {
+    setShowBuyModal(false)
+    setOrderSuccess(true)
+    setTimeout(() => setOrderSuccess(false), 3000)
+  }
+
+  // Render for customer
+  if (selectedBranchView === 'customer') {
+    return (
+      <div className="space-y-6">
+        <div className="relative">
+          <div className="absolute -inset-1 rounded-lg blur opacity-25" style={{ background: 'linear-gradient(to right, #FFA500, #FF6347)' }}></div>
+          <div className="relative p-6 rounded-lg border" style={{ background: 'linear-gradient(to right, #FFA50010, #FF634710)', borderColor: '#FFA50033' }}>
+            <h1 className="text-3xl font-bold tracking-tight bg-gradient-to-r from-orange-700 to-yellow-400 bg-clip-text text-transparent">
+              Products
+            </h1>
+            <p className="text-muted-foreground mt-2">
+              Browse and order your favorite coffee shop items
+            </p>
+            <div className="absolute top-4 right-4">
+              <Sparkles className="h-6 w-6 animate-pulse" style={{ color: '#FFA500' }} />
+            </div>
+          </div>
+        </div>
+        <Card className="card-gradient">
+          <CardHeader>
+            <CardTitle className="flex items-center">
+              <Search className="mr-2 h-5 w-5 text-blue-500" />
+              Filters
+            </CardTitle>
+            <CardDescription>
+              Search and filter products
+            </CardDescription>
+          </CardHeader>
+          <CardContent>
+            <div className="flex flex-col sm:flex-row gap-4">
+              <div className="relative flex-1">
+                <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-muted-foreground h-4 w-4" />
+                <Input
+                  placeholder="Search products..."
+                  value={searchTerm}
+                  onChange={(e) => setSearchTerm(e.target.value)}
+                  className="pl-10 form-input"
+                />
+              </div>
+              <Select value={categoryFilter} onValueChange={setCategoryFilter}>
+                <SelectTrigger className="w-full sm:w-[180px] form-input">
+                  <SelectValue placeholder="Filter by category" />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectItem value="all">All Categories</SelectItem>
+                  {[...new Set(products.map(p => p.category))].filter(Boolean).map((category) => (
+                    <SelectItem key={category} value={category}>
+                      {category}
+                    </SelectItem>
+                  ))}
+                </SelectContent>
+              </Select>
+            </div>
+          </CardContent>
+        </Card>
+        <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
+          {filteredProducts.map(product => (
+            <Card key={product.id} className="group bg-gradient-to-br from-yellow-100 via-orange-50 to-yellow-200 border-0 shadow-xl">
+              <CardHeader className="flex flex-col items-center gap-2 pb-0">
+                <img
+                  src={product.image}
+                  alt={product.name}
+                  className="w-24 h-24 rounded-full border-4 border-orange-200 shadow-lg object-cover bg-white"
+                />
+                <CardTitle className="text-lg font-bold text-orange-800 mt-2 text-center">
+                  {product.name}
+                </CardTitle>
+                <Badge className="bg-gradient-to-r from-orange-500 to-yellow-400 text-white font-semibold px-3 py-1 rounded-full">
+                  {product.category}
+                </Badge>
+              </CardHeader>
+              <CardContent className="flex flex-col items-center gap-1 text-sm text-gray-700">
+                <div className="font-medium">Rs. {product.price}</div>
+                <div className="text-xs text-gray-500 mb-2 text-center">{product.description}</div>
+                <Button onClick={() => handleBuy(product)} className="bg-gradient-to-r from-orange-500 to-yellow-400 text-white font-semibold px-4 py-2 rounded-full mt-2 hover:scale-105 transition">
+                  Buy Now
+                </Button>
+              </CardContent>
+            </Card>
+          ))}
+        </div>
+        {/* Buy Modal */}
+        {showBuyModal && selectedProduct && (
+          <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/40">
+            <div className="bg-white rounded-xl p-8 shadow-xl w-full max-w-sm flex flex-col items-center">
+              <h2 className="text-2xl font-bold mb-2 text-orange-700">Order {selectedProduct.name}</h2>
+              <img src={selectedProduct.image} alt={selectedProduct.name} className="w-20 h-20 rounded-full border-2 border-orange-200 mb-4" />
+              <div className="mb-4">Price: <span className="font-semibold">Rs. {selectedProduct.price}</span></div>
+              <div className="mb-4 flex items-center gap-2">
+                <span>Quantity:</span>
+                <Input type="number" min={1} value={quantity} onChange={e => setQuantity(Number(e.target.value))} className="w-20" />
+              </div>
+              <div className="flex gap-2 mt-2">
+                <Button onClick={handleConfirmOrder} className="bg-gradient-to-r from-orange-500 to-yellow-400 text-white font-semibold px-4 py-2 rounded-full">Confirm Order</Button>
+                <Button variant="outline" onClick={() => setShowBuyModal(false)}>Cancel</Button>
+              </div>
+            </div>
+          </div>
+        )}
+        {/* Order Success Message */}
+        {orderSuccess && (
+          <div className="fixed bottom-8 left-1/2 -translate-x-1/2 bg-green-500 text-white px-6 py-3 rounded-full shadow-lg font-semibold z-50">
+            Order placed successfully!
+          </div>
+        )}
+      </div>
+    )
   }
 
   return (

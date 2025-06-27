@@ -128,7 +128,7 @@ export default function StatsCards({ className = '' }: StatsCardsProps) {
       {stats.map((stat, index) => {
         const Icon = stat.icon
         return (
-          <Card key={index} className="hover:shadow-lg transition-shadow duration-300">
+          <Card key={index} className="hover:shadow-lg transition-shadow duration-300 border-2 border-orange-400">
             <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
               <CardTitle className="text-sm font-medium text-muted-foreground">
                 {stat.title}
