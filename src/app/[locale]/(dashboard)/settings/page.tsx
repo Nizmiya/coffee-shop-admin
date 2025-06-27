@@ -31,7 +31,8 @@ import {
   CreditCard,
   Trash2,
   Building2,
-  Plus
+  Plus,
+  Lock
 } from 'lucide-react'
 
 export default function SettingsPage() {
@@ -185,16 +186,16 @@ export default function SettingsPage() {
   return (
     <div className="space-y-6">
       <div className="relative">
-        <div className="absolute -inset-1 bg-gradient-to-r from-indigo-600 to-purple-600 rounded-lg blur opacity-25"></div>
-        <div className="relative bg-gradient-to-r from-indigo-600/10 to-purple-600/10 p-6 rounded-lg border border-indigo-200/20">
-          <h1 className="text-3xl font-bold tracking-tight bg-gradient-to-r from-indigo-600 to-purple-600 bg-clip-text text-transparent">
+        <div className="absolute -inset-1 bg-gradient-to-r from-orange-700 to-yellow-400 rounded-lg blur opacity-25"></div>
+        <div className="relative bg-gradient-to-r from-orange-700/10 to-yellow-400/10 p-6 rounded-lg border border-orange-200/20">
+          <h1 className="text-3xl font-bold tracking-tight bg-gradient-to-r from-orange-700 to-yellow-400 bg-clip-text text-transparent">
             Settings
           </h1>
           <p className="text-muted-foreground mt-2">
             Manage your coffee shop preferences and configurations
           </p>
           <div className="absolute top-4 right-4">
-            <Sparkles className="h-6 w-6 text-indigo-400 animate-pulse" />
+            <Sparkles className="h-6 w-6 text-orange-400 animate-pulse" />
           </div>
         </div>
       </div>
@@ -203,9 +204,9 @@ export default function SettingsPage() {
       <div className="flex flex-wrap gap-2">
         <Button 
           onClick={handleSave}
-          className="btn-gradient hover:shadow-lg transition-all duration-300"
+          className="bg-gradient-to-r from-orange-700 to-yellow-400 text-white font-semibold"
         >
-          <Save className="mr-2 h-4 w-4" />
+          <Lock className="mr-2 h-4 w-4 text-white" />
           Save Changes
         </Button>
         <Button 
@@ -240,7 +241,7 @@ export default function SettingsPage() {
         <Card>
           <CardHeader>
             <CardTitle className="flex items-center">
-              <Building2 className="mr-2 h-5 w-5 text-purple-500" />
+              <Building2 className="mr-2 h-5 w-5 text-orange-500" />
               Branch Management
             </CardTitle>
             <CardDescription>
@@ -529,6 +530,11 @@ export default function SettingsPage() {
           </CardContent>
         </Card>
       </div>
+
+      <Button className="bg-gradient-to-r from-orange-700 to-yellow-400 text-white font-semibold">
+        <Plus className="mr-2 h-4 w-4 text-white" />
+        Add New Branch
+      </Button>
     </div>
   )
 } 

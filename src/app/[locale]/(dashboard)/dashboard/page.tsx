@@ -125,14 +125,14 @@ export default function DashboardPage() {
   return (
     <div className="space-y-6 p-1 overflow-visible">
       <div className="relative">
-        <div className="absolute -inset-1 bg-gradient-to-r from-purple-600 to-pink-600 rounded-lg blur opacity-25"></div>
-        <div className="relative bg-white/70 backdrop-blur-sm p-4 rounded-lg border border-purple-200/20">
-          <div className="flex flex-col sm:flex-row items-center justify-between">
-            <div className="mb-4 sm:mb-0">
-              <h1 className="text-3xl font-bold tracking-tight bg-gradient-to-r from-purple-600 to-pink-600 bg-clip-text text-transparent">
+        <div className="absolute -inset-1 bg-gradient-to-r from-orange-700 to-yellow-400 rounded-lg blur opacity-25"></div>
+        <div className="relative bg-gradient-to-r from-orange-700/10 to-yellow-400/10 p-6 rounded-lg border border-orange-200/20">
+          <div className="flex items-center justify-between mb-4">
+            <div>
+              <h1 className="text-3xl font-bold tracking-tight bg-gradient-to-r from-orange-700 to-yellow-400 bg-clip-text text-transparent">
                 {branchLabel} Dashboard
               </h1>
-              <p className="text-sm text-gray-500 mt-1">
+              <p className="text-muted-foreground mt-2">
                 Real-time overview of your branch performance.
               </p>
             </div>
@@ -160,6 +160,13 @@ export default function DashboardPage() {
                   {formatTime(currentDateTime)}
                 </span>
               </div>
+              <div className="flex items-center space-x-2 mt-2">
+                <span className="text-xs text-gray-500 font-medium">Open:</span>
+                <span className="text-xs text-green-700 font-semibold">8:00 AM</span>
+                <span className="text-xs text-gray-400">|</span>
+                <span className="text-xs text-gray-500 font-medium">Close:</span>
+                <span className="text-xs text-red-700 font-semibold">9:00 PM</span>
+              </div>
             </div>
           </CardContent>
         </Card>
@@ -168,7 +175,7 @@ export default function DashboardPage() {
           <CardContent className="p-4">
             <div className="flex items-center justify-between">
                 <div className="flex items-center space-x-3">
-                    <Building2 className="h-5 w-5 text-purple-600" />
+                    <Building2 className="mr-2 h-5 w-5 text-orange-500" />
                     <h3 className="text-sm font-semibold text-gray-800">{branchLocation}</h3>
                 </div>
                 <div className="text-right">
@@ -185,14 +192,14 @@ export default function DashboardPage() {
         <Card className="stats-card group">
           <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
             <CardTitle className="text-sm font-medium">Total Sales</CardTitle>
-            <DollarSign className="h-4 w-4 text-gray-500 group-hover:text-green-500 transition-colors" />
+            <DollarSign className="h-4 w-4 text-gray-500 group-hover:text-orange-500 transition-colors" />
           </CardHeader>
           <CardContent>
             <div className="text-2xl font-bold text-gray-800">
-              ${branchStats?.totalSales.toLocaleString() || '0'}
+              Rs. {branchStats?.totalSales.toLocaleString() || '0'}
             </div>
             <p className="text-xs text-gray-500 flex items-center mt-1">
-              <TrendingUp className="mr-1 h-3 w-3 text-green-500" />
+              <TrendingUp className="mr-1 h-3 w-3 text-orange-500" />
               +{branchStats?.monthlyGrowth || 0}% from last month
             </p>
           </CardContent>
@@ -201,14 +208,14 @@ export default function DashboardPage() {
         <Card className="stats-card group">
           <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
             <CardTitle className="text-sm font-medium">Total Orders</CardTitle>
-            <ShoppingCart className="h-4 w-4 text-gray-500 group-hover:text-blue-500 transition-colors" />
+            <ShoppingCart className="h-4 w-4 text-gray-500 group-hover:text-orange-500 transition-colors" />
           </CardHeader>
           <CardContent>
             <div className="text-2xl font-bold text-gray-800">
               {branchStats?.totalOrders || 0}
             </div>
             <p className="text-xs text-gray-500 flex items-center mt-1">
-              <TrendingUp className="mr-1 h-3 w-3 text-blue-500" />
+              <TrendingUp className="mr-1 h-3 w-3 text-orange-500" />
               +{branchStats?.todayOrders || 0} orders today
             </p>
           </CardContent>
@@ -217,7 +224,7 @@ export default function DashboardPage() {
         <Card className="stats-card group">
           <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
             <CardTitle className="text-sm font-medium">Customers</CardTitle>
-            <Users className="h-4 w-4 text-gray-500 group-hover:text-purple-500 transition-colors" />
+            <Users className="h-4 w-4 text-gray-500 group-hover:text-orange-500 transition-colors" />
           </CardHeader>
           <CardContent>
             <div className="text-2xl font-bold text-gray-800">
@@ -229,14 +236,14 @@ export default function DashboardPage() {
         <Card className="stats-card group">
           <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
             <CardTitle className="text-sm font-medium">Avg. Order Value</CardTitle>
-            <Sparkles className="h-4 w-4 text-gray-500 group-hover:text-pink-500 transition-colors" />
+            <Sparkles className="h-4 w-4 text-gray-500 group-hover:text-orange-500 transition-colors" />
           </CardHeader>
           <CardContent>
             <div className="text-2xl font-bold text-gray-800">
-              {(branchStats?.totalSales && branchStats?.totalOrders) ? (branchStats.totalSales / branchStats.totalOrders).toFixed(2) : '0.00'}
+              Rs. {(branchStats?.totalSales && branchStats?.totalOrders) ? (branchStats.totalSales / branchStats.totalOrders).toFixed(2) : '0.00'}
             </div>
             <p className="text-xs text-gray-500 mt-1">
-              vs. $22.50 last month
+              vs. Rs. 22.50 last month
             </p>
           </CardContent>
         </Card>
@@ -248,7 +255,7 @@ export default function DashboardPage() {
         <Card className="col-span-2 bg-white/60 backdrop-blur-sm border-gray-200/50">
           <CardHeader>
             <CardTitle className="flex items-center">
-              <BarChart3 className="mr-2 h-5 w-5 text-purple-500" />
+              <BarChart3 className="mr-2 h-5 w-5 text-orange-500" />
               Revenue Trends - {branchLabel}
             </CardTitle>
             <CardDescription>Monthly revenue performance over time</CardDescription>
@@ -256,15 +263,15 @@ export default function DashboardPage() {
           <CardContent>
             <ResponsiveContainer width="100%" height={300}>
               <AreaChart data={salesData}>
-                <CartesianGrid strokeDasharray="3 3" stroke="rgba(139, 92, 246, 0.1)" />
+                <CartesianGrid strokeDasharray="3 3" stroke="rgba(255, 165, 0, 0.1)" />
                 <XAxis dataKey="date" stroke="#888888" fontSize={12} tickLine={false} axisLine={false} />
-                <YAxis stroke="#888888" fontSize={12} tickLine={false} axisLine={false} tickFormatter={(value) => `$${value}`} />
-                <Tooltip contentStyle={{ backgroundColor: 'rgba(255, 255, 255, 0.95)', border: '1px solid rgba(139, 92, 246, 0.2)', borderRadius: '8px', boxShadow: '0 10px 25px rgba(0, 0, 0, 0.1)' }} />
+                <YAxis stroke="#888888" fontSize={12} tickLine={false} axisLine={false} tickFormatter={(value) => `Rs.${value}`} />
+                <Tooltip contentStyle={{ backgroundColor: 'rgba(255, 255, 255, 0.95)', border: '1px solid #FFD580', borderRadius: '8px', boxShadow: '0 10px 25px rgba(0, 0, 0, 0.1)' }} />
                 <Area type="monotone" dataKey="sales" stroke="url(#areaGradient)" fill="url(#areaGradient)" strokeWidth={3} />
                 <defs>
                   <linearGradient id="areaGradient" x1="0" y1="0" x2="0" y2="1">
-                    <stop offset="5%" stopColor="#8b5cf6" stopOpacity={0.8}/>
-                    <stop offset="95%" stopColor="#ec4899" stopOpacity={0.1}/>
+                    <stop offset="5%" stopColor="#FFA500" stopOpacity={0.8}/>
+                    <stop offset="95%" stopColor="#FFB347" stopOpacity={0.1}/>
                   </linearGradient>
                 </defs>
               </AreaChart>
@@ -275,7 +282,7 @@ export default function DashboardPage() {
         <Card className="col-span-1 bg-white/60 backdrop-blur-sm border-gray-200/50">
           <CardHeader>
             <CardTitle className="flex items-center">
-              <Package className="mr-2 h-5 w-5 text-orange-500" />
+              <Package className="mr-2 h-5 w-5" style={{ color: '#FFA500' }} />
               Top Products - {branchLabel}
             </CardTitle>
             <CardDescription>Best performing products by revenue</CardDescription>
@@ -297,7 +304,7 @@ export default function DashboardPage() {
                     <Cell key={`cell-${index}`} fill={COLORS[index % COLORS.length]} />
                   ))}
                 </Pie>
-                <Tooltip contentStyle={{ backgroundColor: 'rgba(255, 255, 255, 0.95)', border: '1px solid rgba(139, 92, 246, 0.2)', borderRadius: '8px', boxShadow: '0 10px 25px rgba(0, 0, 0, 0.1)' }} />
+                <Tooltip contentStyle={{ backgroundColor: 'rgba(255, 255, 255, 0.95)', border: '1px solid #FFD580', borderRadius: '8px', boxShadow: '0 10px 25px rgba(0, 0, 0, 0.1)' }} />
               </PieChart>
             </ResponsiveContainer>
           </CardContent>
@@ -309,7 +316,7 @@ export default function DashboardPage() {
         <Card className="bg-white/60 backdrop-blur-sm border-gray-200/50">
           <CardHeader>
             <CardTitle className="flex items-center">
-              <Sparkles className="mr-2 h-5 w-5 text-pink-500" />
+              <Sparkles className="mr-2 h-5 w-5 text-orange-500" />
               Quick Actions
             </CardTitle>
           </CardHeader>
@@ -321,7 +328,7 @@ export default function DashboardPage() {
                 onClick={() => handleQuickAction(action.path)}
                 className="w-full justify-start p-3 text-left group"
               >
-                <action.icon className="h-5 w-5 mr-3 text-gray-500 group-hover:text-pink-500 transition-colors" />
+                <action.icon className="h-5 w-5 mr-3 text-gray-500 group-hover:text-orange-500 transition-colors" />
                 <span className="font-semibold text-gray-700">{action.name}</span>
                 <ArrowRight className="h-4 w-4 ml-auto text-gray-400 opacity-0 group-hover:opacity-100 transition-opacity" />
               </Button>
@@ -333,16 +340,16 @@ export default function DashboardPage() {
         <Card className="bg-white/60 backdrop-blur-sm border-gray-200/50">
           <CardHeader>
             <CardTitle className="flex items-center">
-              <Users className="mr-2 h-5 w-5 text-purple-500" />
+              <Users className="mr-2 h-5 w-5 text-orange-500" />
               Recent Orders
             </CardTitle>
           </CardHeader>
           <CardContent className="space-y-3">
             {recentOrders.map((order) => (
-              <div key={order.id} className="flex items-center justify-between p-2 rounded-lg hover:bg-purple-50/50 transition-colors">
+              <div key={order.id} className="flex items-center justify-between p-2 rounded-lg hover:bg-orange-50/50 transition-colors">
                 <div className="flex items-center">
-                  <div className="p-2 bg-purple-100 rounded-full mr-3">
-                    <ShoppingCart className="h-4 w-4 text-purple-600" />
+                  <div className="p-2 bg-orange-100 rounded-full mr-3">
+                    <ShoppingCart className="h-4 w-4 text-orange-600" />
                   </div>
                   <div>
                     <p className="font-semibold text-sm">{order.customerName}</p>
@@ -350,7 +357,7 @@ export default function DashboardPage() {
                   </div>
                 </div>
                 <div className="text-right">
-                  <p className="font-bold text-sm">${(order.total ?? 0).toFixed(2)}</p>
+                  <p className="font-bold text-sm">Rs.{(order.total ?? 0).toFixed(2)}</p>
                   <Badge 
                     variant={order.status === 'completed' ? 'default' : order.status === 'pending' ? 'secondary' : 'destructive'}
                     className="text-xs mt-1"

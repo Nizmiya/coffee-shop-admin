@@ -134,16 +134,16 @@ export default function ProductsPage() {
     <div className="space-y-6">
       <div className="flex items-center justify-between">
         <div className="relative">
-          <div className="absolute -inset-1 bg-gradient-to-r from-orange-600 to-red-600 rounded-lg blur opacity-25"></div>
-          <div className="relative bg-gradient-to-r from-orange-600/10 to-red-600/10 p-6 rounded-lg border border-orange-200/20">
-            <h1 className="text-3xl font-bold tracking-tight bg-gradient-to-r from-orange-600 to-red-600 bg-clip-text text-transparent">
+          <div className="absolute -inset-1 rounded-lg blur opacity-25" style={{ background: 'linear-gradient(to right, #FFA500, #FF6347)' }}></div>
+          <div className="relative p-6 rounded-lg border" style={{ background: 'linear-gradient(to right, #FFA50010, #FF634710)', borderColor: '#FFA50033' }}>
+            <h1 className="text-3xl font-bold tracking-tight bg-gradient-to-r from-orange-700 to-yellow-400 bg-clip-text text-transparent">
               Products
             </h1>
             <p className="text-muted-foreground mt-2">
               Manage your coffee shop products and menu items
             </p>
             <div className="absolute top-4 right-4">
-              <Sparkles className="h-6 w-6 text-orange-400 animate-pulse" />
+              <Sparkles className="h-6 w-6 animate-pulse" style={{ color: '#FFA500' }} />
             </div>
           </div>
         </div>
@@ -253,9 +253,9 @@ export default function ProductsPage() {
                 <Badge variant="outline" className="group-hover:border-purple-300 group-hover:text-purple-600 transition-colors">
                   {product.category}
                 </Badge>
-                <span className="text-lg font-bold bg-gradient-to-r from-green-600 to-emerald-600 bg-clip-text text-transparent">
-                  ${product.price}
-                </span>
+                <div className="text-2xl font-bold text-green-600">
+                  Rs. {product.price}
+                </div>
               </div>
             </CardHeader>
             <CardContent className="p-4 pt-0">
@@ -349,7 +349,7 @@ export default function ProductsPage() {
           </CardHeader>
           <CardContent>
             <div className="text-2xl font-bold bg-gradient-to-r from-blue-600 to-cyan-600 bg-clip-text text-transparent">
-              {products.length > 0 ? `$${(products.reduce((sum, p) => sum + p.price, 0) / products.length).toFixed(2)}` : '$0.00'}
+              {products.length > 0 ? `Rs. ${(products.reduce((sum, p) => sum + p.price, 0) / products.length).toFixed(2)}` : 'Rs. 0.00'}
             </div>
             <p className="text-xs text-muted-foreground">
               Per product

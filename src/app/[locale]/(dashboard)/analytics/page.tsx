@@ -101,11 +101,11 @@ export default function AnalyticsPage() {
   return (
     <div className="space-y-6">
       <div className="relative">
-        <div className="absolute -inset-1 bg-gradient-to-r from-purple-600 to-pink-600 rounded-lg blur opacity-25"></div>
-        <div className="relative bg-gradient-to-r from-purple-600/10 to-pink-600/10 p-6 rounded-lg border border-purple-200/20">
+        <div className="absolute -inset-1 bg-gradient-to-r from-orange-700 to-yellow-400 rounded-lg blur opacity-25"></div>
+        <div className="relative bg-gradient-to-r from-orange-700/10 to-yellow-400/10 p-6 rounded-lg border border-orange-200/20">
           <div className="flex items-center justify-between mb-4">
             <div>
-              <h1 className="text-3xl font-bold tracking-tight bg-gradient-to-r from-purple-600 to-pink-600 bg-clip-text text-transparent">
+              <h1 className="text-3xl font-bold tracking-tight bg-gradient-to-r from-orange-700 to-yellow-400 bg-clip-text text-transparent">
                 Analytics - {branchLabel}
               </h1>
               <p className="text-muted-foreground mt-2">
@@ -114,7 +114,7 @@ export default function AnalyticsPage() {
             </div>
           </div>
           <div className="absolute top-4 right-4">
-            <Sparkles className="h-6 w-6 text-purple-400 animate-pulse" />
+            <Sparkles className="h-6 w-6 text-orange-400 animate-pulse" />
           </div>
         </div>
       </div>
@@ -131,7 +131,7 @@ export default function AnalyticsPage() {
           </CardHeader>
           <CardContent>
             <div className="text-2xl font-bold bg-gradient-to-r from-green-600 to-emerald-600 bg-clip-text text-transparent">
-              ${analyticsData.totalRevenue.toLocaleString()}
+              Rs. {analyticsData.totalRevenue.toLocaleString()}
             </div>
             <p className="text-xs text-muted-foreground flex items-center mt-1">
               <TrendingUp className="mr-1 h-3 w-3 text-green-500" />
@@ -228,7 +228,7 @@ export default function AnalyticsPage() {
           <CardContent>
             <ResponsiveContainer width="100%" height={350}>
               <AreaChart data={data.salesData}>
-                <CartesianGrid strokeDasharray="3 3" stroke="rgba(139, 92, 246, 0.1)" />
+                <CartesianGrid strokeDasharray="3 3" stroke="rgba(255, 165, 0, 0.1)" />
                 <XAxis 
                   dataKey="date" 
                   stroke="#888888"
@@ -241,12 +241,12 @@ export default function AnalyticsPage() {
                   fontSize={12}
                   tickLine={false}
                   axisLine={false}
-                  tickFormatter={(value) => `$${value}`}
+                  tickFormatter={(value) => `Rs.${value}`}
                 />
                 <Tooltip 
                   contentStyle={{
                     backgroundColor: 'rgba(255, 255, 255, 0.95)',
-                    border: '1px solid rgba(139, 92, 246, 0.2)',
+                    border: '1px solid #FFD580',
                     borderRadius: '8px',
                     boxShadow: '0 10px 25px rgba(0, 0, 0, 0.1)'
                   }}
@@ -260,8 +260,8 @@ export default function AnalyticsPage() {
                 />
                 <defs>
                   <linearGradient id="areaGradient" x1="0" y1="0" x2="0" y2="1">
-                    <stop offset="5%" stopColor="#8b5cf6" stopOpacity={0.8}/>
-                    <stop offset="95%" stopColor="#ec4899" stopOpacity={0.1}/>
+                    <stop offset="5%" stopColor="#FFA500" stopOpacity={0.8}/>
+                    <stop offset="95%" stopColor="#FFB347" stopOpacity={0.1}/>
                   </linearGradient>
                 </defs>
               </AreaChart>
@@ -272,7 +272,7 @@ export default function AnalyticsPage() {
         <Card className="col-span-3 chart-container group">
           <CardHeader>
             <CardTitle className="flex items-center">
-              <Award className="mr-2 h-5 w-5 text-orange-500" />
+              <Award className="mr-2 h-5 w-5" style={{ color: '#FFA500' }} />
               Top Products - {branchLabel}
             </CardTitle>
             <CardDescription>
@@ -299,7 +299,7 @@ export default function AnalyticsPage() {
                 <Tooltip 
                   contentStyle={{
                     backgroundColor: 'rgba(255, 255, 255, 0.95)',
-                    border: '1px solid rgba(139, 92, 246, 0.2)',
+                    border: '1px solid #FFD580',
                     borderRadius: '8px',
                     boxShadow: '0 10px 25px rgba(0, 0, 0, 0.1)'
                   }}
@@ -325,7 +325,7 @@ export default function AnalyticsPage() {
           <CardContent>
             <ResponsiveContainer width="100%" height={300}>
               <BarChart data={data.salesData}>
-                <CartesianGrid strokeDasharray="3 3" stroke="rgba(139, 92, 246, 0.1)" />
+                <CartesianGrid strokeDasharray="3 3" stroke="rgba(255, 165, 0, 0.1)" />
                 <XAxis 
                   dataKey="date" 
                   stroke="#888888"
@@ -338,11 +338,12 @@ export default function AnalyticsPage() {
                   fontSize={12}
                   tickLine={false}
                   axisLine={false}
+                  tickFormatter={(value) => `Rs.${value}`}
                 />
                 <Tooltip 
                   contentStyle={{
                     backgroundColor: 'rgba(255, 255, 255, 0.95)',
-                    border: '1px solid rgba(139, 92, 246, 0.2)',
+                    border: '1px solid #FFD580',
                     borderRadius: '8px',
                     boxShadow: '0 10px 25px rgba(0, 0, 0, 0.1)'
                   }}
@@ -376,7 +377,7 @@ export default function AnalyticsPage() {
           <CardContent>
             <ResponsiveContainer width="100%" height={300}>
               <LineChart data={data.customerMetrics}>
-                <CartesianGrid strokeDasharray="3 3" stroke="rgba(139, 92, 246, 0.1)" />
+                <CartesianGrid strokeDasharray="3 3" stroke="rgba(255, 165, 0, 0.1)" />
                 <XAxis 
                   dataKey="month" 
                   stroke="#888888"
@@ -389,11 +390,12 @@ export default function AnalyticsPage() {
                   fontSize={12}
                   tickLine={false}
                   axisLine={false}
+                  tickFormatter={(value) => `Rs.${value}`}
                 />
                 <Tooltip 
                   contentStyle={{
                     backgroundColor: 'rgba(255, 255, 255, 0.95)',
-                    border: '1px solid rgba(139, 92, 246, 0.2)',
+                    border: '1px solid #FFD580',
                     borderRadius: '8px',
                     boxShadow: '0 10px 25px rgba(0, 0, 0, 0.1)'
                   }}

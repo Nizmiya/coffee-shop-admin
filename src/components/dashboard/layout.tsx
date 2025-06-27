@@ -29,6 +29,7 @@ import { useRouter } from 'next/navigation'
 import BranchSelector from './branch-selector'
 import { getDataByBranchView } from '@/lib/mock-data'
 import { Badge } from '@/components/ui/badge'
+import { cn } from '@/lib/utils'
 
 const navigation = [
   { name: 'Dashboard', href: '/dashboard', icon: LayoutDashboard },
@@ -66,10 +67,10 @@ export default function DashboardLayout({ children }: DashboardLayoutProps) {
         <div className="flex items-center justify-between h-16 px-6 border-b border-border">
           <div className="flex items-center space-x-2">
             <div className="relative">
-              <Coffee className="h-8 w-8 text-primary animate-pulse" />
-              <div className="absolute -inset-1 bg-gradient-to-r from-purple-600 to-pink-600 rounded-full blur opacity-20 animate-pulse"></div>
+              <Coffee className="h-8 w-8 text-orange-700 animate-pulse" />
+              <div className="absolute -inset-1 bg-gradient-to-r from-orange-700 to-yellow-400 rounded-full blur opacity-20 animate-pulse"></div>
             </div>
-            <span className="text-xl font-bold bg-gradient-to-r from-purple-600 to-pink-600 bg-clip-text text-transparent">
+            <span className="text-xl font-bold bg-gradient-to-r from-orange-700 to-yellow-400 bg-clip-text text-transparent">
               Coffee Admin
             </span>
           </div>
@@ -85,23 +86,23 @@ export default function DashboardLayout({ children }: DashboardLayoutProps) {
         
         <nav className="mt-6 px-3">
           <div className="space-y-1">
-            {navigation.map((item) => {
-              const isActive = pathname === item.href
-              return (
+            <div className="flex flex-col space-y-2 mt-8">
+              {navigation.map((item) => (
                 <Link
                   key={item.name}
                   href={item.href}
-                  className={`nav-item flex items-center px-3 py-2 text-sm font-medium rounded-md transition-all duration-300 ${
-                    isActive
-                      ? 'nav-item active text-white shadow-lg'
-                      : 'text-muted-foreground hover:text-foreground hover:bg-accent/50'
-                  }`}
+                  className={cn(
+                    'flex items-center px-6 py-3 rounded-lg transition-colors font-medium',
+                    pathname === item.href
+                      ? 'bg-orange-50 text-orange-700'
+                      : 'text-gray-600 hover:bg-orange-50 hover:text-orange-700'
+                  )}
                 >
-                  <item.icon className="mr-3 h-5 w-5" />
-                  {item.name}
+                  <item.icon className="h-5 w-5 mr-3 text-orange-500" />
+                  <span>{item.name}</span>
                 </Link>
-              )
-            })}
+              ))}
+            </div>
           </div>
         </nav>
       </div>

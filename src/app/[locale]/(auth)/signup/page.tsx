@@ -37,14 +37,14 @@ export default function SignupPage() {
   };
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-purple-700 via-fuchsia-600 to-pink-400">
+    <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-orange-700 via-orange-400 to-yellow-300">
       <Card className="w-full max-w-md shadow-2xl border-0 bg-white/90">
         <CardHeader className="flex flex-col items-center gap-2">
           <div className="flex items-center gap-2">
-            <Coffee className="w-8 h-8 text-purple-700" />
-            <span className="text-3xl font-extrabold bg-gradient-to-r from-purple-700 to-pink-500 bg-clip-text text-transparent tracking-tight">Nz Coffee</span>
+            <Coffee className="w-8 h-8 text-orange-700" />
+            <span className="text-3xl font-extrabold bg-gradient-to-r from-orange-700 to-yellow-400 bg-clip-text text-transparent tracking-tight">Nz Coffee</span>
           </div>
-          <CardTitle className="text-xl font-bold text-purple-700">Create Your Account</CardTitle>
+          <CardTitle className="text-xl font-bold text-orange-700">Create Your Account</CardTitle>
           <p className="text-sm text-muted-foreground">Join us to manage your dashboard</p>
         </CardHeader>
         <CardContent className="space-y-6">
@@ -87,7 +87,7 @@ export default function SignupPage() {
                 />
                 <button
                   type="button"
-                  className="absolute right-2 top-1/2 -translate-y-1/2 text-purple-600 hover:text-purple-800"
+                  className="absolute right-2 top-1/2 -translate-y-1/2 text-orange-600 hover:text-orange-800"
                   onClick={() => setShowPassword(v => !v)}
                   tabIndex={-1}
                 >
@@ -109,7 +109,7 @@ export default function SignupPage() {
                 />
                 <button
                   type="button"
-                  className="absolute right-2 top-1/2 -translate-y-1/2 text-purple-600 hover:text-purple-800"
+                  className="absolute right-2 top-1/2 -translate-y-1/2 text-orange-600 hover:text-orange-800"
                   onClick={() => setShowConfirmPassword(v => !v)}
                   tabIndex={-1}
                 >
@@ -118,26 +118,26 @@ export default function SignupPage() {
               </div>
             </div>
             {error && <div className="text-red-600 text-xs text-center">{error}</div>}
-            <Button type="submit" className="w-full bg-gradient-to-r from-purple-700 to-pink-500 text-white font-bold shadow-md hover:from-pink-500 hover:to-purple-700">
+            <Button type="submit" className="w-full bg-gradient-to-r from-orange-700 to-yellow-500 text-white font-bold shadow-md hover:from-yellow-500 hover:to-orange-700">
               <UserPlus className="w-4 h-4 mr-2" /> Create Account
             </Button>
           </form>
           <div className="flex items-center gap-2">
-            <div className="flex-1 h-px bg-gradient-to-r from-purple-300 to-pink-300" />
+            <div className="flex-1 h-px bg-gradient-to-r from-orange-300 to-yellow-300" />
             <span className="text-xs text-muted-foreground">or sign up with</span>
-            <div className="flex-1 h-px bg-gradient-to-l from-purple-300 to-pink-300" />
+            <div className="flex-1 h-px bg-gradient-to-l from-orange-300 to-yellow-300" />
           </div>
           <div className="flex gap-2">
-            <Button variant="outline" className="flex-1 border-purple-200 hover:bg-purple-50">
+            <Button variant="outline" className="flex-1 border-orange-200 hover:bg-orange-50">
               <Facebook className="w-4 h-4 mr-2 text-blue-600" /> Facebook
             </Button>
-            <Button variant="outline" className="flex-1 border-purple-200 hover:bg-purple-50">
+            <Button variant="outline" className="flex-1 border-orange-200 hover:bg-orange-50">
               <Mail className="w-4 h-4 mr-2 text-rose-500" /> Google
             </Button>
           </div>
           <div className="text-center text-sm mt-2">
             Already have an account?{' '}
-            <Link href="/login" className="text-purple-700 font-semibold hover:underline inline-flex items-center">
+            <Link href="/login" className="text-orange-700 font-semibold hover:underline inline-flex items-center">
               <LogIn className="w-4 h-4 mr-1" /> Login
             </Link>
           </div>

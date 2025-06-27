@@ -8,7 +8,7 @@ import { Textarea } from '@/components/ui/textarea'
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select'
 import { Switch } from '@/components/ui/switch'
 import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle, DialogTrigger } from '@/components/ui/dialog'
-import { Plus, Upload, Coffee, Sparkles } from 'lucide-react'
+import { Plus, Upload, Coffee, Sparkles, Package, UploadCloud } from 'lucide-react'
 import { categories as mockCategories } from '@/lib/mock-data'
 import { Product } from '@/lib/types'
 import { BranchSelector } from '@/components/ui/branch-selector'
@@ -86,15 +86,15 @@ export default function ProductForm({ onSave, onCancel, open, setOpen, initialDa
   return (
     <Dialog open={open} onOpenChange={setOpen}>
       <DialogTrigger asChild>
-        <Button className="btn-gradient hover:shadow-lg transition-all duration-300">
-          <Plus className="mr-2 h-4 w-4" />
+        <Button className="bg-gradient-to-r from-orange-700 to-yellow-400 text-white font-semibold">
+          <Plus className="mr-2 h-4 w-4 text-white" />
           Add Product
         </Button>
       </DialogTrigger>
-      <DialogContent className="max-w-[340px] p-2 rounded-lg bg-white/95 border border-purple-200 shadow-xl">
+      <DialogContent className="max-w-[300px] p-2 rounded-lg bg-white/95 border border-orange-200 shadow-xl mt-10">
         <DialogHeader>
-          <DialogTitle className="flex items-center text-base font-bold bg-gradient-to-r from-purple-600 to-pink-600 bg-clip-text text-transparent">
-            <Coffee className="mr-2 h-4 w-4 text-purple-500" />
+          <DialogTitle className="flex items-center gap-2 text-2xl font-bold bg-gradient-to-r from-orange-700 to-yellow-400 bg-clip-text text-transparent">
+            <Package className="h-6 w-6 text-orange-500" />
             {isEdit ? 'Edit Product' : 'Add New Product'}
           </DialogTitle>
           <DialogDescription className="text-muted-foreground text-xs">
@@ -167,12 +167,10 @@ export default function ProductForm({ onSave, onCancel, open, setOpen, initialDa
                   <Button type="button" variant="outline" size="sm" className="absolute top-2 right-2 bg-white/90 hover:bg-white transition-colors p-1 h-6 w-6" onClick={() => setFormData(prev => ({ ...prev, image: '' }))}>Remove</Button>
                 </div>
               ) : (
-                <div className="aspect-video h-24 bg-gradient-to-br from-purple-50 to-pink-50 rounded-lg border-2 border-dashed border-purple-200 hover:border-purple-300 flex items-center justify-center">
-                  <div className="text-center">
-                    <Upload className="mx-auto h-6 w-6 text-purple-400 mb-1" />
-                    <p className="text-xs text-muted-foreground mb-0">Click to upload or drag and drop</p>
-                    <p className="text-[10px] text-muted-foreground">PNG, JPG, GIF up to 10MB</p>
-                  </div>
+                <div className="flex flex-col items-center justify-center border-2 border-dashed rounded-lg p-4 cursor-pointer transition-colors duration-200 border-orange-300 hover:border-orange-400">
+                  <UploadCloud className="h-8 w-8 text-orange-400 mb-2" />
+                  <span className="text-xs text-orange-500">Click to upload or drag and drop</span>
+                  <span className="text-[10px] text-orange-300">PNG, JPG, GIF up to 10MB</span>
                 </div>
               )}
               <Input type="file" accept="image/*" onChange={handleImageUpload} className="absolute inset-0 w-full h-full opacity-0 cursor-pointer" />
@@ -180,7 +178,10 @@ export default function ProductForm({ onSave, onCancel, open, setOpen, initialDa
           </div>
           <div className="flex justify-end space-x-2 pt-2">
             <Button type="button" variant="outline" size="sm" onClick={() => { setOpen(false); onCancel && onCancel(); }} className="h-8 px-3 text-xs">Cancel</Button>
-            <Button type="submit" size="sm" className="btn-gradient h-8 px-3 text-xs"><Sparkles className="mr-1 h-4 w-4" />{isEdit ? 'Update' : 'Create'}</Button>
+            <Button type="submit" className="bg-gradient-to-r from-orange-700 to-yellow-400 text-white font-semibold">
+              <Sparkles className="mr-2 h-4 w-4 text-white" />
+              {isEdit ? 'Update' : 'Create'}
+            </Button>
           </div>
         </form>
       </DialogContent>

@@ -79,12 +79,12 @@ export function BranchSelector({ branches, className, selectedBranchId, onBranch
           aria-expanded={open}
           aria-label="Select a branch"
           className={cn(
-            "w-full justify-between bg-white/50 backdrop-blur-sm border-purple-200 hover:border-purple-300",
+            "w-full justify-between bg-white border-orange-200 hover:border-orange-300",
             className
           )}
         >
           <div className="flex items-center gap-2">
-            <Building2 className="h-4 w-4 text-purple-600" />
+            <Building2 className="h-4 w-4 text-orange-500" />
             <span className="font-medium">
               {currentSelected ? currentSelected.name : "Select Branch..."}
             </span>

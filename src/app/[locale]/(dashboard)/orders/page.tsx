@@ -63,16 +63,16 @@ export default function OrdersPage() {
   return (
     <div className="space-y-6">
       <div className="relative">
-        <div className="absolute -inset-1 bg-gradient-to-r from-blue-600 to-cyan-600 rounded-lg blur opacity-25"></div>
-        <div className="relative bg-gradient-to-r from-blue-600/10 to-cyan-600/10 p-6 rounded-lg border border-blue-200/20">
-          <h1 className="text-3xl font-bold tracking-tight bg-gradient-to-r from-blue-600 to-cyan-600 bg-clip-text text-transparent">
+        <div className="absolute -inset-1 bg-gradient-to-r from-orange-700 to-yellow-400 rounded-lg blur opacity-25"></div>
+        <div className="relative bg-gradient-to-r from-orange-700/10 to-yellow-400/10 p-6 rounded-lg border border-orange-200/20">
+          <h1 className="text-3xl font-bold tracking-tight bg-gradient-to-r from-orange-700 to-yellow-400 bg-clip-text text-transparent">
             Orders
           </h1>
           <p className="text-muted-foreground mt-2">
             Manage and track customer orders
           </p>
           <div className="absolute top-4 right-4">
-            <Sparkles className="h-6 w-6 text-blue-400 animate-pulse" />
+            <Sparkles className="h-6 w-6 text-orange-400 animate-pulse" />
           </div>
         </div>
       </div>
@@ -107,7 +107,7 @@ export default function OrdersPage() {
           </CardHeader>
           <CardContent>
             <div className="text-2xl font-bold bg-gradient-to-r from-green-600 to-emerald-600 bg-clip-text text-transparent">
-              ${totalRevenue.toLocaleString()}
+              Rs. {totalRevenue.toLocaleString()}
             </div>
             <p className="text-xs text-muted-foreground">
               Total earnings
@@ -143,7 +143,7 @@ export default function OrdersPage() {
           </CardHeader>
           <CardContent>
             <div className="text-2xl font-bold bg-gradient-to-r from-purple-600 to-pink-600 bg-clip-text text-transparent">
-              ${averageOrderValue.toFixed(2)}
+              Rs. {averageOrderValue.toFixed(2)}
             </div>
             <p className="text-xs text-muted-foreground">
               Per order value
@@ -224,7 +224,7 @@ export default function OrdersPage() {
                     <TableCell>{order.customerName}</TableCell>
                     <TableCell>{order.items.length} items</TableCell>
                     <TableCell className="font-bold bg-gradient-to-r from-green-600 to-emerald-600 bg-clip-text text-transparent">
-                      ${order.total}
+                      Rs. {order.total}
                     </TableCell>
                     <TableCell>
                       <Badge className={`${getStatusColor(order.status)} flex items-center gap-1`}>

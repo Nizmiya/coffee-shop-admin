@@ -57,16 +57,16 @@ export default function CustomersPage() {
   return (
     <div className="space-y-6">
       <div className="relative">
-        <div className="absolute -inset-1 bg-gradient-to-r from-green-600 to-emerald-600 rounded-lg blur opacity-25"></div>
-        <div className="relative bg-gradient-to-r from-green-600/10 to-emerald-600/10 p-6 rounded-lg border border-green-200/20">
-          <h1 className="text-3xl font-bold tracking-tight bg-gradient-to-r from-green-600 to-emerald-600 bg-clip-text text-transparent">
+        <div className="absolute -inset-1 bg-gradient-to-r from-orange-700 to-yellow-400 rounded-lg blur opacity-25"></div>
+        <div className="relative bg-gradient-to-r from-orange-700/10 to-yellow-400/10 p-6 rounded-lg border border-orange-200/20">
+          <h1 className="text-3xl font-bold tracking-tight bg-gradient-to-r from-orange-700 to-yellow-400 bg-clip-text text-transparent">
             Customers
           </h1>
           <p className="text-muted-foreground mt-2">
-            Manage your customer database and relationships
+            Manage and view your customers
           </p>
           <div className="absolute top-4 right-4">
-            <Sparkles className="h-6 w-6 text-green-400 animate-pulse" />
+            <Sparkles className="h-6 w-6 text-orange-400 animate-pulse" />
           </div>
         </div>
       </div>
@@ -119,7 +119,7 @@ export default function CustomersPage() {
           </CardHeader>
           <CardContent>
             <div className="text-2xl font-bold bg-gradient-to-r from-purple-600 to-pink-600 bg-clip-text text-transparent">
-              ${totalSpent.toLocaleString()}
+              Rs. {totalSpent.toLocaleString()}
             </div>
             <p className="text-xs text-muted-foreground">
               From all customers
@@ -137,7 +137,7 @@ export default function CustomersPage() {
           </CardHeader>
           <CardContent>
             <div className="text-2xl font-bold bg-gradient-to-r from-orange-600 to-red-600 bg-clip-text text-transparent">
-              ${averageSpent.toFixed(2)}
+              Rs. {averageSpent.toFixed(2)}
             </div>
             <p className="text-xs text-muted-foreground">
               Per customer
@@ -240,10 +240,8 @@ export default function CustomersPage() {
                         <span className="font-medium">{customer.orderCount}</span>
                       </div>
                     </TableCell>
-                    <TableCell>
-                      <div className="font-bold bg-gradient-to-r from-green-600 to-emerald-600 bg-clip-text text-transparent">
-                        ${customer.totalSpent}
-                      </div>
+                    <TableCell className="font-bold text-green-600">
+                      Rs. {customer.totalSpent}
                     </TableCell>
                     <TableCell>
                       <Badge 
@@ -319,7 +317,7 @@ export default function CustomersPage() {
                       </div>
                     </div>
                     <div className="font-bold bg-gradient-to-r from-green-600 to-emerald-600 bg-clip-text text-transparent">
-                      ${customer.totalSpent}
+                      Rs. {customer.totalSpent}
                     </div>
                   </div>
                 ))}

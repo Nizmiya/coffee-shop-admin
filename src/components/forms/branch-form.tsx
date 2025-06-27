@@ -51,8 +51,8 @@ export default function BranchForm({ onSave, onCancel, open, setOpen, initialDat
       </DialogTrigger>
       <DialogContent className="max-w-[380px] p-2 rounded-lg bg-white/95 border border-purple-200 shadow-xl">
         <DialogHeader>
-          <DialogTitle className="flex items-center text-base font-bold bg-gradient-to-r from-purple-600 to-pink-600 bg-clip-text text-transparent">
-            <Building2 className="mr-2 h-4 w-4 text-purple-500" />
+          <DialogTitle className="flex items-center gap-2 text-2xl font-bold bg-gradient-to-r from-orange-700 to-yellow-400 bg-clip-text text-transparent">
+            <Building2 className="h-6 w-6 text-orange-500" />
             {isEdit ? 'Edit Branch' : 'Add New Branch'}
           </DialogTitle>
           <DialogDescription className="text-muted-foreground text-xs">
@@ -62,7 +62,7 @@ export default function BranchForm({ onSave, onCancel, open, setOpen, initialDat
         <form onSubmit={handleSubmit} className="space-y-3 p-4">
           <div className="space-y-1">
             <Label htmlFor="name" className="text-xs font-medium">Branch Name</Label>
-            <Input id="name" value={formData.name} onChange={(e) => setFormData(prev => ({ ...prev, name: e.target.value }))} placeholder="e.g., Kandy Branch" className="form-input h-8 text-sm" required />
+            <Input id="name" value={formData.name} onChange={(e) => setFormData(prev => ({ ...prev, name: e.target.value }))} placeholder="e.g., Kandy Branch" className="form-input h-8 text-sm focus:border-orange-500 focus:ring-2 focus:ring-orange-400" required />
           </div>
           <div className="space-y-1">
             <Label htmlFor="location" className="text-xs font-medium">Location</Label>
@@ -84,7 +84,10 @@ export default function BranchForm({ onSave, onCancel, open, setOpen, initialDat
           </div>
           <div className="flex justify-end space-x-2 pt-2">
             <Button type="button" variant="outline" size="sm" onClick={() => { setOpen(false); onCancel(); }} className="h-8 px-3 text-xs">Cancel</Button>
-            <Button type="submit" size="sm" className="btn-gradient h-8 px-3 text-xs"><Sparkles className="mr-1 h-4 w-4" />{isEdit ? 'Update' : 'Create'}</Button>
+            <Button type="submit" className="bg-gradient-to-r from-orange-700 to-yellow-400 text-white font-semibold">
+              <Sparkles className="mr-2 h-4 w-4 text-white" />
+              {isEdit ? 'Update' : 'Create'}
+            </Button>
           </div>
         </form>
       </DialogContent>
