@@ -875,4 +875,39 @@ export const analyticsData = getBranchAnalyticsData('jaffna') || {
   conversionGrowth: 2.1,
 }
 
-export const customerMetrics = getBranchCustomerMetrics() 
+export const customerMetrics = getBranchCustomerMetrics()
+
+export const promotions = [
+  {
+    id: 'promo1',
+    title: 'Buy 1 Get 1 Free Espresso',
+    description: 'Enjoy a free espresso with every espresso purchase this week!',
+    type: 'weekly',
+    branchId: 'jaffna',
+    createdAt: new Date('2024-06-24'),
+  },
+  {
+    id: 'promo2',
+    title: '20% Off All Pastries',
+    description: 'Get 20% off on all pastries every Monday!',
+    type: 'weekly',
+    branchId: 'colombo',
+    createdAt: new Date('2024-06-24'),
+  },
+  {
+    id: 'promo3',
+    title: 'Monthly Coffee Subscription',
+    description: 'Subscribe and get unlimited coffee refills for a month!',
+    type: 'monthly',
+    branchId: 'jaffna',
+    createdAt: new Date('2024-06-01'),
+  },
+  {
+    id: 'promo4',
+    title: 'Family Combo Offer',
+    description: 'Special combo for families every weekend!',
+    type: 'monthly',
+    branchId: 'colombo',
+    createdAt: new Date('2024-06-01'),
+  },
+]; 
