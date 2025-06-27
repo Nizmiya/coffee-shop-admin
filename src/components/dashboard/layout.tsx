@@ -17,6 +17,7 @@ import {
   Coffee,
   Bell,
   AlertTriangle,
+  UserCog,
 } from 'lucide-react'
 import { Button } from '@/components/ui/button'
 import { useDashboardStore } from '@/lib/store/dashboard-store'
@@ -36,6 +37,7 @@ const navigation = [
   { name: 'Orders', href: '/orders', icon: ShoppingCart },
   { name: 'Products', href: '/products', icon: Package },
   { name: 'Customers', href: '/customers', icon: Users },
+  { name: 'Staff', href: '/staff', icon: UserCog },
   { name: 'Analytics', href: '/analytics', icon: BarChart3 },
   { name: 'Settings', href: '/settings', icon: Settings },
 ]
